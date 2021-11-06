@@ -11,7 +11,3 @@
 "so long partner" {return(SOLONGPARTNER);}
 %%
 
-int main() {
-  yylex();
-  return 0;
-}
