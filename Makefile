@@ -7,7 +7,7 @@ lex.yy.c: lexer.l parser.tab.h
 	flex lexer.l
 
 howdy: lex.yy.c parser.tab.c parser.tab.h
-	gcc -o howdy parser.tab.c lex.yy.c
+	gcc -ll parser.tab.c lex.yy.c -o howdy
 
 clean:
-	rm howdy parser.tab.c lex.yy.c parser.tab.h howdy.output
+	$(RM) howdy parser.tab.c lex.yy.c parser.tab.h parser.output
