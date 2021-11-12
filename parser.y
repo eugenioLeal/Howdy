@@ -13,6 +13,7 @@ void yyerror(char *s);
 %token ASSIGNMENT_OPERATOR LBRACKET RBRACKET NUMBER AND OR EQUALS NOT_EQUALS LESS_THAN GREATER_THAN LESS_EQUAL GREATER_EQUAL
 
 %%
+program: /*empty*/ {yyerror("empty program")};
 program: HOWDY_PARTNER expression_statement SO_LONG_PARTNER {printf("Yeeeehaw!")};
 
 logical_or_expression: logical_and_expression
@@ -53,4 +54,5 @@ void yyerror(char *s) {
 
 int main(void) {
   yyparse();
+  printf("-------------------------------------------\n");
 }
