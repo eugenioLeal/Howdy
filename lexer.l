@@ -2,9 +2,10 @@
 #include <stdio.h>  
 #include "parser.tab.h"
 #include <stdlib.h>
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 int line_number = 0;
 %}
-
+%option yylineno
 %option noyywrap
 id [a-zA-Z]{0,30}
 num [0-9]+

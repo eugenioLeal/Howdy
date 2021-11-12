@@ -5,6 +5,7 @@ extern int line_number;
 void yyerror(char *s);
 %}
 
+%locations
 %start program
 %token HOWDY_PARTNER SO_LONG_PARTNER
 %token SEMI
@@ -13,8 +14,12 @@ void yyerror(char *s);
 %token ASSIGNMENT_OPERATOR LBRACKET RBRACKET NUMBER AND OR EQUALS NOT_EQUALS LESS_THAN GREATER_THAN LESS_EQUAL GREATER_EQUAL
 
 %%
-program: /*empty*/ {yyerror("empty program")};
 program: HOWDY_PARTNER expression_statement SO_LONG_PARTNER {printf("Yeeeehaw!")};
+program: /*empty*/ {yyerror("empty program")};
+program: HOWDY_PARTNER expression_statement {yyerror("Expected SO_LONG_PARTNER")};
+program: expression_statement SO_LONG_PARTNER {yyerror("Expected HOWDY_PARTNER")};
+program: expression_statement {yyerror("Expected HOWDY_PARTNER SO_LONG_PARTNER")};
+
 
 logical_or_expression: logical_and_expression
                         | logical_or_expression OR logical_and_expression;
@@ -49,7 +54,7 @@ expression_statement: expression SEMI | /*empty*/;
 %%
 
 void yyerror(char *s) {
-  printf("\nline %d: %s\n",line_number,s);
+  printf("\nline %d: %s\n",yylloc.first_line,s);
 }
 
 int main(void) {
