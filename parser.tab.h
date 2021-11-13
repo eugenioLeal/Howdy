@@ -1,14 +1,14 @@
-/* A Bison parser, made by GNU Bison 2.3.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
-/* Skeleton interface for Bison's Yacc-like parsers in C
+/* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
-   This program is free software; you can redistribute it and/or modify
+   This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,9 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.  */
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -33,81 +31,82 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Tokens.  */
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
+#ifndef YY_YY_PARSER_TAB_H_INCLUDED
+# define YY_YY_PARSER_TAB_H_INCLUDED
+/* Debug traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 1
+#endif
+#if YYDEBUG
+extern int yydebug;
+#endif
+
+/* Token type.  */
 #ifndef YYTOKENTYPE
 # define YYTOKENTYPE
-   /* Put the tokens into the symbol table, so that GDB and other debuggers
-      know about them.  */
-   enum yytokentype {
-     HOWDY_PARTNER = 258,
-     SO_LONG_PARTNER = 259,
-     SEMI = 260,
-     ID = 261,
-     INT = 262,
-     FLOAT = 263,
-     CHAR = 264,
-     NUTHIN = 265,
-     STRUCT = 266,
-     ADDITION = 267,
-     SUBTRACTION = 268,
-     MULTIPLICATION = 269,
-     DIVISION = 270,
-     MOD = 271,
-     LPAREN = 272,
-     RPAREN = 273,
-     ASSIGNMENT_OPERATOR = 274,
-     LBRACKET = 275,
-     RBRACKET = 276,
-     NUMBER = 277,
-     AND = 278,
-     OR = 279,
-     EQUALS = 280,
-     NOT_EQUALS = 281,
-     LESS_THAN = 282,
-     GREATER_THAN = 283,
-     LESS_EQUAL = 284,
-     GREATER_EQUAL = 285
-   };
+  enum yytokentype
+  {
+    HOWDY_PARTNER = 258,
+    SO_LONG_PARTNER = 259,
+    SEMI = 260,
+    COMMA = 261,
+    ID = 262,
+    INT = 263,
+    FLOAT = 264,
+    CHAR = 265,
+    NUTHIN = 266,
+    STRUCT = 267,
+    FUNC = 268,
+    ADDITION = 269,
+    SUBTRACTION = 270,
+    MULTIPLICATION = 271,
+    DIVISION = 272,
+    MOD = 273,
+    LPAREN = 274,
+    RPAREN = 275,
+    INTNUM = 276,
+    FLOATNUM = 277,
+    TRUE = 278,
+    FALSE = 279,
+    NOT = 280,
+    GETS = 281,
+    PUTS = 282,
+    PUTSLN = 283,
+    ASSIGNMENT_OPERATOR = 284,
+    LBRACKET = 285,
+    RBRACKET = 286,
+    LBRACE = 287,
+    RBRACE = 288,
+    NUMBER = 289,
+    AND = 290,
+    OR = 291,
+    EQUALS = 292,
+    NOT_EQUALS = 293,
+    LESS_THAN = 294,
+    GREATER_THAN = 295,
+    LESS_EQUAL = 296,
+    GREATER_EQUAL = 297,
+    SELECTION_IF = 298,
+    SELECTION_ELSE = 299,
+    LOOP_FOR = 300,
+    LOOP_DOWHILE = 301,
+    LOOP_WHILE = 302
+  };
 #endif
-/* Tokens.  */
-#define HOWDY_PARTNER 258
-#define SO_LONG_PARTNER 259
-#define SEMI 260
-#define ID 261
-#define INT 262
-#define FLOAT 263
-#define CHAR 264
-#define NUTHIN 265
-#define STRUCT 266
-#define ADDITION 267
-#define SUBTRACTION 268
-#define MULTIPLICATION 269
-#define DIVISION 270
-#define MOD 271
-#define LPAREN 272
-#define RPAREN 273
-#define ASSIGNMENT_OPERATOR 274
-#define LBRACKET 275
-#define RBRACKET 276
-#define NUMBER 277
-#define AND 278
-#define OR 279
-#define EQUALS 280
-#define NOT_EQUALS 281
-#define LESS_THAN 282
-#define GREATER_THAN 283
-#define LESS_EQUAL 284
-#define GREATER_EQUAL 285
 
-
-
-
+/* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef int YYSTYPE;
-# define yystype YYSTYPE /* obsolescent; will be withdrawn */
-# define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1
+# define YYSTYPE_IS_DECLARED 1
 #endif
+
 
 extern YYSTYPE yylval;
 
+int yyparse (void);
+
+#endif /* !YY_YY_PARSER_TAB_H_INCLUDED  */

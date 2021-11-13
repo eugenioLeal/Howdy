@@ -1,117 +1,282 @@
-Terminals which are not used
+Terminals unused in grammar
 
-   INT
-   FLOAT
-   CHAR
-   NUTHIN
-   STRUCT
-   ASSIGNMENT_OPERATOR
-   LBRACKET
-   RBRACKET
+    COMMA
+    NUTHIN
+    STRUCT
+    FUNC
+    TRUE
+    FALSE
+    NOT
+    GETS
+    PUTS
+    PUTSLN
+    ASSIGNMENT_OPERATOR
+    LBRACKET
+    RBRACKET
+    NUMBER
+    AND
+    OR
+    LOOP_FOR
+    LOOP_DOWHILE
+    LOOP_WHILE
 
 
 Grammar
 
     0 $accept: program $end
 
-    1 program: HOWDY_PARTNER expression_statement SO_LONG_PARTNER
+    1 program: HOWDY_PARTNER statement_list SO_LONG_PARTNER
 
-    2 logical_or_expression: logical_and_expression
-    3                      | logical_or_expression OR logical_and_expression
+    2 statement: definition_statement SEMI
+    3          | arithmetic_operation SEMI
+    4          | selection_statement
 
-    4 logical_and_expression: equality_expression
-    5                       | logical_and_expression AND equality_expression
+    5 statement_list: statement
+    6               | statement_list statement
 
-    6 equality_expression: relational_expression
-    7                    | equality_expression EQUALS relational_expression
-    8                    | equality_expression NOT_EQUALS relational_expression
+    7 definition_statement: INT ID
+    8                     | FLOAT ID
+    9                     | CHAR ID
 
-    9 relational_expression: additive_expression
-   10                      | relational_expression LESS_THAN additive_expression
-   11                      | relational_expression GREATER_THAN additive_expression
-   12                      | relational_expression LESS_EQUAL additive_expression
-   13                      | relational_expression GREATER_EQUAL additive_expression
+   10 sum_operation: ID ADDITION ID
+   11              | ID ADDITION INTNUM
+   12              | ID ADDITION FLOATNUM
+   13              | INTNUM ADDITION ID
+   14              | INTNUM ADDITION INTNUM
+   15              | INTNUM ADDITION FLOATNUM
+   16              | FLOATNUM ADDITION ID
+   17              | FLOATNUM ADDITION INTNUM
+   18              | FLOATNUM ADDITION FLOATNUM
 
-   14 additive_expression: multiplicative_expression
-   15                    | additive_expression ADDITION multiplicative_expression
-   16                    | additive_expression SUBTRACTION multiplicative_expression
+   19 sub_operation: ID SUBTRACTION ID
+   20              | ID SUBTRACTION INTNUM
+   21              | ID SUBTRACTION FLOATNUM
+   22              | INTNUM SUBTRACTION ID
+   23              | INTNUM SUBTRACTION INTNUM
+   24              | INTNUM SUBTRACTION FLOATNUM
+   25              | FLOATNUM SUBTRACTION ID
+   26              | FLOATNUM SUBTRACTION INTNUM
+   27              | FLOATNUM SUBTRACTION FLOATNUM
 
-   17 multiplicative_expression: primary_expression
-   18                          | multiplicative_expression MULTIPLICATION primary_expression
-   19                          | multiplicative_expression DIVISION primary_expression
-   20                          | multiplicative_expression MOD primary_expression
+   28 mult_operation: ID MULTIPLICATION ID
+   29               | ID MULTIPLICATION INTNUM
+   30               | ID MULTIPLICATION FLOATNUM
+   31               | INTNUM MULTIPLICATION ID
+   32               | INTNUM MULTIPLICATION INTNUM
+   33               | INTNUM MULTIPLICATION FLOATNUM
+   34               | FLOATNUM MULTIPLICATION ID
+   35               | FLOATNUM MULTIPLICATION INTNUM
+   36               | FLOATNUM MULTIPLICATION FLOATNUM
 
-   21 primary_expression: ID
-   22                   | LPAREN expression RPAREN
-   23                   | NUMBER
+   37 div_operation: ID DIVISION ID
+   38              | ID DIVISION INTNUM
+   39              | ID DIVISION FLOATNUM
+   40              | INTNUM DIVISION ID
+   41              | INTNUM DIVISION INTNUM
+   42              | INTNUM DIVISION FLOATNUM
+   43              | FLOATNUM DIVISION ID
+   44              | FLOATNUM DIVISION INTNUM
+   45              | FLOATNUM DIVISION FLOATNUM
 
-   24 expression: logical_or_expression
+   46 mod_operation: ID MOD ID
+   47              | ID MOD INTNUM
+   48              | ID MOD FLOATNUM
+   49              | INTNUM MOD ID
+   50              | INTNUM MOD INTNUM
+   51              | INTNUM MOD FLOATNUM
+   52              | FLOATNUM MOD ID
+   53              | FLOATNUM MOD INTNUM
+   54              | FLOATNUM MOD FLOATNUM
 
-   25 expression_statement: expression SEMI
-   26                     | /* empty */
+   55 arithmetic_operation: sum_operation
+   56                     | sub_operation
+   57                     | mult_operation
+   58                     | div_operation
+   59                     | mod_operation
+
+   60 equality_expression: ID EQUALS ID
+   61                    | ID EQUALS INTNUM
+   62                    | ID EQUALS FLOATNUM
+   63                    | INTNUM EQUALS ID
+   64                    | INTNUM EQUALS INTNUM
+   65                    | INTNUM EQUALS FLOATNUM
+   66                    | FLOATNUM EQUALS ID
+   67                    | FLOATNUM EQUALS INTNUM
+   68                    | FLOATNUM EQUALS FLOATNUM
+
+   69 inequality_expression: ID NOT_EQUALS ID
+   70                      | ID NOT_EQUALS INTNUM
+   71                      | ID NOT_EQUALS FLOATNUM
+   72                      | INTNUM NOT_EQUALS ID
+   73                      | INTNUM NOT_EQUALS INTNUM
+   74                      | INTNUM NOT_EQUALS FLOATNUM
+   75                      | FLOATNUM NOT_EQUALS ID
+   76                      | FLOATNUM NOT_EQUALS INTNUM
+   77                      | FLOATNUM NOT_EQUALS FLOATNUM
+
+   78 lessthan_expression: ID LESS_THAN ID
+   79                    | ID LESS_THAN INTNUM
+   80                    | ID LESS_THAN FLOATNUM
+   81                    | INTNUM LESS_THAN ID
+   82                    | INTNUM LESS_THAN INTNUM
+   83                    | INTNUM LESS_THAN FLOATNUM
+   84                    | FLOATNUM LESS_THAN ID
+   85                    | FLOATNUM LESS_THAN INTNUM
+   86                    | FLOATNUM LESS_THAN FLOATNUM
+
+   87 greaterthan_expression: ID GREATER_THAN ID
+   88                       | ID GREATER_THAN INTNUM
+   89                       | ID GREATER_THAN FLOATNUM
+   90                       | INTNUM GREATER_THAN ID
+   91                       | INTNUM GREATER_THAN INTNUM
+   92                       | INTNUM GREATER_THAN FLOATNUM
+   93                       | FLOATNUM GREATER_THAN ID
+   94                       | FLOATNUM GREATER_THAN INTNUM
+   95                       | FLOATNUM GREATER_THAN FLOATNUM
+
+   96 lessequal_expression: ID LESS_EQUAL ID
+   97                     | ID LESS_EQUAL INTNUM
+   98                     | ID LESS_EQUAL FLOATNUM
+   99                     | INTNUM LESS_EQUAL ID
+  100                     | INTNUM LESS_EQUAL INTNUM
+  101                     | INTNUM LESS_EQUAL FLOATNUM
+  102                     | FLOATNUM LESS_EQUAL ID
+  103                     | FLOATNUM LESS_EQUAL INTNUM
+  104                     | FLOATNUM LESS_EQUAL FLOATNUM
+
+  105 greaterequal_expression: ID GREATER_EQUAL ID
+  106                        | ID GREATER_EQUAL INTNUM
+  107                        | ID GREATER_EQUAL FLOATNUM
+  108                        | INTNUM GREATER_EQUAL ID
+  109                        | INTNUM GREATER_EQUAL INTNUM
+  110                        | INTNUM GREATER_EQUAL FLOATNUM
+  111                        | FLOATNUM GREATER_EQUAL ID
+  112                        | FLOATNUM GREATER_EQUAL INTNUM
+  113                        | FLOATNUM GREATER_EQUAL FLOATNUM
+
+  114 conditional_expression: equality_expression
+  115                       | inequality_expression
+  116                       | lessthan_expression
+  117                       | greaterthan_expression
+  118                       | lessequal_expression
+  119                       | greaterequal_expression
+
+  120 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE
+  121                    | SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
 
 
 Terminals, with rules where they appear
 
-$end (0) 0
-error (256)
-HOWDY_PARTNER (258) 1
-SO_LONG_PARTNER (259) 1
-SEMI (260) 25
-ID (261) 21
-INT (262)
-FLOAT (263)
-CHAR (264)
-NUTHIN (265)
-STRUCT (266)
-ADDITION (267) 15
-SUBTRACTION (268) 16
-MULTIPLICATION (269) 18
-DIVISION (270) 19
-MOD (271) 20
-LPAREN (272) 22
-RPAREN (273) 22
-ASSIGNMENT_OPERATOR (274)
-LBRACKET (275)
-RBRACKET (276)
-NUMBER (277) 23
-AND (278) 5
-OR (279) 3
-EQUALS (280) 7
-NOT_EQUALS (281) 8
-LESS_THAN (282) 10
-GREATER_THAN (283) 11
-LESS_EQUAL (284) 12
-GREATER_EQUAL (285) 13
+    $end (0) 0
+    error (256)
+    HOWDY_PARTNER (258) 1
+    SO_LONG_PARTNER (259) 1
+    SEMI (260) 2 3
+    COMMA (261)
+    ID (262) 7 8 9 10 11 12 13 16 19 20 21 22 25 28 29 30 31 34 37 38 39 40 43 46 47 48 49 52 60 61 62 63 66 69 70 71 72 75 78 79 80 81 84 87 88 89 90 93 96 97 98 99 102 105 106 107 108 111
+    INT (263) 7
+    FLOAT (264) 8
+    CHAR (265) 9
+    NUTHIN (266)
+    STRUCT (267)
+    FUNC (268)
+    ADDITION (269) 10 11 12 13 14 15 16 17 18
+    SUBTRACTION (270) 19 20 21 22 23 24 25 26 27
+    MULTIPLICATION (271) 28 29 30 31 32 33 34 35 36
+    DIVISION (272) 37 38 39 40 41 42 43 44 45
+    MOD (273) 46 47 48 49 50 51 52 53 54
+    LPAREN (274) 120 121
+    RPAREN (275) 120 121
+    INTNUM (276) 11 13 14 15 17 20 22 23 24 26 29 31 32 33 35 38 40 41 42 44 47 49 50 51 53 61 63 64 65 67 70 72 73 74 76 79 81 82 83 85 88 90 91 92 94 97 99 100 101 103 106 108 109 110 112
+    FLOATNUM (277) 12 15 16 17 18 21 24 25 26 27 30 33 34 35 36 39 42 43 44 45 48 51 52 53 54 62 65 66 67 68 71 74 75 76 77 80 83 84 85 86 89 92 93 94 95 98 101 102 103 104 107 110 111 112 113
+    TRUE (278)
+    FALSE (279)
+    NOT (280)
+    GETS (281)
+    PUTS (282)
+    PUTSLN (283)
+    ASSIGNMENT_OPERATOR (284)
+    LBRACKET (285)
+    RBRACKET (286)
+    LBRACE (287) 120 121
+    RBRACE (288) 120 121
+    NUMBER (289)
+    AND (290)
+    OR (291)
+    EQUALS (292) 60 61 62 63 64 65 66 67 68
+    NOT_EQUALS (293) 69 70 71 72 73 74 75 76 77
+    LESS_THAN (294) 78 79 80 81 82 83 84 85 86
+    GREATER_THAN (295) 87 88 89 90 91 92 93 94 95
+    LESS_EQUAL (296) 96 97 98 99 100 101 102 103 104
+    GREATER_EQUAL (297) 105 106 107 108 109 110 111 112 113
+    SELECTION_IF (298) 120 121
+    SELECTION_ELSE (299) 121
+    LOOP_FOR (300)
+    LOOP_DOWHILE (301)
+    LOOP_WHILE (302)
 
 
 Nonterminals, with rules where they appear
 
-$accept (31)
-    on left: 0
-program (32)
-    on left: 1, on right: 0
-logical_or_expression (33)
-    on left: 2 3, on right: 3 24
-logical_and_expression (34)
-    on left: 4 5, on right: 2 3 5
-equality_expression (35)
-    on left: 6 7 8, on right: 4 5 7 8
-relational_expression (36)
-    on left: 9 10 11 12 13, on right: 6 7 8 10 11 12 13
-additive_expression (37)
-    on left: 14 15 16, on right: 9 10 11 12 13 15 16
-multiplicative_expression (38)
-    on left: 17 18 19 20, on right: 14 15 16 18 19 20
-primary_expression (39)
-    on left: 21 22 23, on right: 17 18 19 20
-expression (40)
-    on left: 24, on right: 22 25
-expression_statement (41)
-    on left: 25 26, on right: 1
+    $accept (48)
+        on left: 0
+    program (49)
+        on left: 1
+        on right: 0
+    statement (50)
+        on left: 2 3 4
+        on right: 5 6
+    statement_list (51)
+        on left: 5 6
+        on right: 1 6 120 121
+    definition_statement (52)
+        on left: 7 8 9
+        on right: 2
+    sum_operation (53)
+        on left: 10 11 12 13 14 15 16 17 18
+        on right: 55
+    sub_operation (54)
+        on left: 19 20 21 22 23 24 25 26 27
+        on right: 56
+    mult_operation (55)
+        on left: 28 29 30 31 32 33 34 35 36
+        on right: 57
+    div_operation (56)
+        on left: 37 38 39 40 41 42 43 44 45
+        on right: 58
+    mod_operation (57)
+        on left: 46 47 48 49 50 51 52 53 54
+        on right: 59
+    arithmetic_operation (58)
+        on left: 55 56 57 58 59
+        on right: 3
+    equality_expression (59)
+        on left: 60 61 62 63 64 65 66 67 68
+        on right: 114
+    inequality_expression (60)
+        on left: 69 70 71 72 73 74 75 76 77
+        on right: 115
+    lessthan_expression (61)
+        on left: 78 79 80 81 82 83 84 85 86
+        on right: 116
+    greaterthan_expression (62)
+        on left: 87 88 89 90 91 92 93 94 95
+        on right: 117
+    lessequal_expression (63)
+        on left: 96 97 98 99 100 101 102 103 104
+        on right: 118
+    greaterequal_expression (64)
+        on left: 105 106 107 108 109 110 111 112 113
+        on right: 119
+    conditional_expression (65)
+        on left: 114 115 116 117 118 119
+        on right: 120 121
+    selection_statement (66)
+        on left: 120 121
+        on right: 4
 
 
-state 0
+State 0
 
     0 $accept: . program $end
 
@@ -120,510 +285,1623 @@ state 0
     program  go to state 2
 
 
-state 1
+State 1
 
-    1 program: HOWDY_PARTNER . expression_statement SO_LONG_PARTNER
+    1 program: HOWDY_PARTNER . statement_list SO_LONG_PARTNER
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+    ID            shift, and go to state 3
+    INT           shift, and go to state 4
+    FLOAT         shift, and go to state 5
+    CHAR          shift, and go to state 6
+    INTNUM        shift, and go to state 7
+    FLOATNUM      shift, and go to state 8
+    SELECTION_IF  shift, and go to state 9
 
-    $default  reduce using rule 26 (expression_statement)
+    statement             go to state 10
+    statement_list        go to state 11
+    definition_statement  go to state 12
+    sum_operation         go to state 13
+    sub_operation         go to state 14
+    mult_operation        go to state 15
+    div_operation         go to state 16
+    mod_operation         go to state 17
+    arithmetic_operation  go to state 18
+    selection_statement   go to state 19
 
-    logical_or_expression      go to state 6
-    logical_and_expression     go to state 7
-    equality_expression        go to state 8
-    relational_expression      go to state 9
-    additive_expression        go to state 10
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
-    expression                 go to state 13
-    expression_statement       go to state 14
 
-
-state 2
+State 2
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 15
+    $end  shift, and go to state 20
 
 
-state 3
+State 3
 
-   21 primary_expression: ID .
+   10 sum_operation: ID . ADDITION ID
+   11              | ID . ADDITION INTNUM
+   12              | ID . ADDITION FLOATNUM
+   19 sub_operation: ID . SUBTRACTION ID
+   20              | ID . SUBTRACTION INTNUM
+   21              | ID . SUBTRACTION FLOATNUM
+   28 mult_operation: ID . MULTIPLICATION ID
+   29               | ID . MULTIPLICATION INTNUM
+   30               | ID . MULTIPLICATION FLOATNUM
+   37 div_operation: ID . DIVISION ID
+   38              | ID . DIVISION INTNUM
+   39              | ID . DIVISION FLOATNUM
+   46 mod_operation: ID . MOD ID
+   47              | ID . MOD INTNUM
+   48              | ID . MOD FLOATNUM
 
-    $default  reduce using rule 21 (primary_expression)
-
-
-state 4
-
-   22 primary_expression: LPAREN . expression RPAREN
-
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
-
-    logical_or_expression      go to state 6
-    logical_and_expression     go to state 7
-    equality_expression        go to state 8
-    relational_expression      go to state 9
-    additive_expression        go to state 10
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
-    expression                 go to state 16
-
-
-state 5
-
-   23 primary_expression: NUMBER .
-
-    $default  reduce using rule 23 (primary_expression)
+    ADDITION        shift, and go to state 21
+    SUBTRACTION     shift, and go to state 22
+    MULTIPLICATION  shift, and go to state 23
+    DIVISION        shift, and go to state 24
+    MOD             shift, and go to state 25
 
 
-state 6
+State 4
 
-    3 logical_or_expression: logical_or_expression . OR logical_and_expression
-   24 expression: logical_or_expression .
+    7 definition_statement: INT . ID
 
-    OR  shift, and go to state 17
-
-    $default  reduce using rule 24 (expression)
+    ID  shift, and go to state 26
 
 
-state 7
+State 5
 
-    2 logical_or_expression: logical_and_expression .
-    5 logical_and_expression: logical_and_expression . AND equality_expression
+    8 definition_statement: FLOAT . ID
 
-    AND  shift, and go to state 18
-
-    $default  reduce using rule 2 (logical_or_expression)
+    ID  shift, and go to state 27
 
 
-state 8
+State 6
 
-    4 logical_and_expression: equality_expression .
-    7 equality_expression: equality_expression . EQUALS relational_expression
-    8                    | equality_expression . NOT_EQUALS relational_expression
+    9 definition_statement: CHAR . ID
 
-    EQUALS      shift, and go to state 19
-    NOT_EQUALS  shift, and go to state 20
-
-    $default  reduce using rule 4 (logical_and_expression)
+    ID  shift, and go to state 28
 
 
-state 9
+State 7
 
-    6 equality_expression: relational_expression .
-   10 relational_expression: relational_expression . LESS_THAN additive_expression
-   11                      | relational_expression . GREATER_THAN additive_expression
-   12                      | relational_expression . LESS_EQUAL additive_expression
-   13                      | relational_expression . GREATER_EQUAL additive_expression
+   13 sum_operation: INTNUM . ADDITION ID
+   14              | INTNUM . ADDITION INTNUM
+   15              | INTNUM . ADDITION FLOATNUM
+   22 sub_operation: INTNUM . SUBTRACTION ID
+   23              | INTNUM . SUBTRACTION INTNUM
+   24              | INTNUM . SUBTRACTION FLOATNUM
+   31 mult_operation: INTNUM . MULTIPLICATION ID
+   32               | INTNUM . MULTIPLICATION INTNUM
+   33               | INTNUM . MULTIPLICATION FLOATNUM
+   40 div_operation: INTNUM . DIVISION ID
+   41              | INTNUM . DIVISION INTNUM
+   42              | INTNUM . DIVISION FLOATNUM
+   49 mod_operation: INTNUM . MOD ID
+   50              | INTNUM . MOD INTNUM
+   51              | INTNUM . MOD FLOATNUM
 
-    LESS_THAN      shift, and go to state 21
-    GREATER_THAN   shift, and go to state 22
-    LESS_EQUAL     shift, and go to state 23
-    GREATER_EQUAL  shift, and go to state 24
-
-    $default  reduce using rule 6 (equality_expression)
-
-
-state 10
-
-    9 relational_expression: additive_expression .
-   15 additive_expression: additive_expression . ADDITION multiplicative_expression
-   16                    | additive_expression . SUBTRACTION multiplicative_expression
-
-    ADDITION     shift, and go to state 25
-    SUBTRACTION  shift, and go to state 26
-
-    $default  reduce using rule 9 (relational_expression)
+    ADDITION        shift, and go to state 29
+    SUBTRACTION     shift, and go to state 30
+    MULTIPLICATION  shift, and go to state 31
+    DIVISION        shift, and go to state 32
+    MOD             shift, and go to state 33
 
 
-state 11
+State 8
 
-   14 additive_expression: multiplicative_expression .
-   18 multiplicative_expression: multiplicative_expression . MULTIPLICATION primary_expression
-   19                          | multiplicative_expression . DIVISION primary_expression
-   20                          | multiplicative_expression . MOD primary_expression
+   16 sum_operation: FLOATNUM . ADDITION ID
+   17              | FLOATNUM . ADDITION INTNUM
+   18              | FLOATNUM . ADDITION FLOATNUM
+   25 sub_operation: FLOATNUM . SUBTRACTION ID
+   26              | FLOATNUM . SUBTRACTION INTNUM
+   27              | FLOATNUM . SUBTRACTION FLOATNUM
+   34 mult_operation: FLOATNUM . MULTIPLICATION ID
+   35               | FLOATNUM . MULTIPLICATION INTNUM
+   36               | FLOATNUM . MULTIPLICATION FLOATNUM
+   43 div_operation: FLOATNUM . DIVISION ID
+   44              | FLOATNUM . DIVISION INTNUM
+   45              | FLOATNUM . DIVISION FLOATNUM
+   52 mod_operation: FLOATNUM . MOD ID
+   53              | FLOATNUM . MOD INTNUM
+   54              | FLOATNUM . MOD FLOATNUM
 
-    MULTIPLICATION  shift, and go to state 27
-    DIVISION        shift, and go to state 28
-    MOD             shift, and go to state 29
-
-    $default  reduce using rule 14 (additive_expression)
-
-
-state 12
-
-   17 multiplicative_expression: primary_expression .
-
-    $default  reduce using rule 17 (multiplicative_expression)
-
-
-state 13
-
-   25 expression_statement: expression . SEMI
-
-    SEMI  shift, and go to state 30
+    ADDITION        shift, and go to state 34
+    SUBTRACTION     shift, and go to state 35
+    MULTIPLICATION  shift, and go to state 36
+    DIVISION        shift, and go to state 37
+    MOD             shift, and go to state 38
 
 
-state 14
+State 9
 
-    1 program: HOWDY_PARTNER expression_statement . SO_LONG_PARTNER
+  120 selection_statement: SELECTION_IF . LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE
+  121                    | SELECTION_IF . LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
 
-    SO_LONG_PARTNER  shift, and go to state 31
+    LPAREN  shift, and go to state 39
 
 
-state 15
+State 10
+
+    5 statement_list: statement .
+
+    $default  reduce using rule 5 (statement_list)
+
+
+State 11
+
+    1 program: HOWDY_PARTNER statement_list . SO_LONG_PARTNER
+    6 statement_list: statement_list . statement
+
+    SO_LONG_PARTNER  shift, and go to state 40
+    ID               shift, and go to state 3
+    INT              shift, and go to state 4
+    FLOAT            shift, and go to state 5
+    CHAR             shift, and go to state 6
+    INTNUM           shift, and go to state 7
+    FLOATNUM         shift, and go to state 8
+    SELECTION_IF     shift, and go to state 9
+
+    statement             go to state 41
+    definition_statement  go to state 12
+    sum_operation         go to state 13
+    sub_operation         go to state 14
+    mult_operation        go to state 15
+    div_operation         go to state 16
+    mod_operation         go to state 17
+    arithmetic_operation  go to state 18
+    selection_statement   go to state 19
+
+
+State 12
+
+    2 statement: definition_statement . SEMI
+
+    SEMI  shift, and go to state 42
+
+
+State 13
+
+   55 arithmetic_operation: sum_operation .
+
+    $default  reduce using rule 55 (arithmetic_operation)
+
+
+State 14
+
+   56 arithmetic_operation: sub_operation .
+
+    $default  reduce using rule 56 (arithmetic_operation)
+
+
+State 15
+
+   57 arithmetic_operation: mult_operation .
+
+    $default  reduce using rule 57 (arithmetic_operation)
+
+
+State 16
+
+   58 arithmetic_operation: div_operation .
+
+    $default  reduce using rule 58 (arithmetic_operation)
+
+
+State 17
+
+   59 arithmetic_operation: mod_operation .
+
+    $default  reduce using rule 59 (arithmetic_operation)
+
+
+State 18
+
+    3 statement: arithmetic_operation . SEMI
+
+    SEMI  shift, and go to state 43
+
+
+State 19
+
+    4 statement: selection_statement .
+
+    $default  reduce using rule 4 (statement)
+
+
+State 20
 
     0 $accept: program $end .
 
     $default  accept
 
 
-state 16
+State 21
 
-   22 primary_expression: LPAREN expression . RPAREN
+   10 sum_operation: ID ADDITION . ID
+   11              | ID ADDITION . INTNUM
+   12              | ID ADDITION . FLOATNUM
 
-    RPAREN  shift, and go to state 32
+    ID        shift, and go to state 44
+    INTNUM    shift, and go to state 45
+    FLOATNUM  shift, and go to state 46
 
 
-state 17
+State 22
 
-    3 logical_or_expression: logical_or_expression OR . logical_and_expression
+   19 sub_operation: ID SUBTRACTION . ID
+   20              | ID SUBTRACTION . INTNUM
+   21              | ID SUBTRACTION . FLOATNUM
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+    ID        shift, and go to state 47
+    INTNUM    shift, and go to state 48
+    FLOATNUM  shift, and go to state 49
 
-    logical_and_expression     go to state 33
-    equality_expression        go to state 8
-    relational_expression      go to state 9
-    additive_expression        go to state 10
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
 
+State 23
 
-state 18
+   28 mult_operation: ID MULTIPLICATION . ID
+   29               | ID MULTIPLICATION . INTNUM
+   30               | ID MULTIPLICATION . FLOATNUM
 
-    5 logical_and_expression: logical_and_expression AND . equality_expression
+    ID        shift, and go to state 50
+    INTNUM    shift, and go to state 51
+    FLOATNUM  shift, and go to state 52
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
 
-    equality_expression        go to state 34
-    relational_expression      go to state 9
-    additive_expression        go to state 10
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
+State 24
 
+   37 div_operation: ID DIVISION . ID
+   38              | ID DIVISION . INTNUM
+   39              | ID DIVISION . FLOATNUM
 
-state 19
+    ID        shift, and go to state 53
+    INTNUM    shift, and go to state 54
+    FLOATNUM  shift, and go to state 55
 
-    7 equality_expression: equality_expression EQUALS . relational_expression
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+State 25
 
-    relational_expression      go to state 35
-    additive_expression        go to state 10
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
+   46 mod_operation: ID MOD . ID
+   47              | ID MOD . INTNUM
+   48              | ID MOD . FLOATNUM
 
+    ID        shift, and go to state 56
+    INTNUM    shift, and go to state 57
+    FLOATNUM  shift, and go to state 58
 
-state 20
 
-    8 equality_expression: equality_expression NOT_EQUALS . relational_expression
+State 26
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+    7 definition_statement: INT ID .
 
-    relational_expression      go to state 36
-    additive_expression        go to state 10
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
+    $default  reduce using rule 7 (definition_statement)
 
 
-state 21
+State 27
 
-   10 relational_expression: relational_expression LESS_THAN . additive_expression
+    8 definition_statement: FLOAT ID .
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+    $default  reduce using rule 8 (definition_statement)
 
-    additive_expression        go to state 37
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
 
+State 28
 
-state 22
+    9 definition_statement: CHAR ID .
 
-   11 relational_expression: relational_expression GREATER_THAN . additive_expression
+    $default  reduce using rule 9 (definition_statement)
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
 
-    additive_expression        go to state 38
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
+State 29
 
+   13 sum_operation: INTNUM ADDITION . ID
+   14              | INTNUM ADDITION . INTNUM
+   15              | INTNUM ADDITION . FLOATNUM
 
-state 23
+    ID        shift, and go to state 59
+    INTNUM    shift, and go to state 60
+    FLOATNUM  shift, and go to state 61
 
-   12 relational_expression: relational_expression LESS_EQUAL . additive_expression
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+State 30
 
-    additive_expression        go to state 39
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
+   22 sub_operation: INTNUM SUBTRACTION . ID
+   23              | INTNUM SUBTRACTION . INTNUM
+   24              | INTNUM SUBTRACTION . FLOATNUM
 
+    ID        shift, and go to state 62
+    INTNUM    shift, and go to state 63
+    FLOATNUM  shift, and go to state 64
 
-state 24
 
-   13 relational_expression: relational_expression GREATER_EQUAL . additive_expression
+State 31
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+   31 mult_operation: INTNUM MULTIPLICATION . ID
+   32               | INTNUM MULTIPLICATION . INTNUM
+   33               | INTNUM MULTIPLICATION . FLOATNUM
 
-    additive_expression        go to state 40
-    multiplicative_expression  go to state 11
-    primary_expression         go to state 12
+    ID        shift, and go to state 65
+    INTNUM    shift, and go to state 66
+    FLOATNUM  shift, and go to state 67
 
 
-state 25
+State 32
 
-   15 additive_expression: additive_expression ADDITION . multiplicative_expression
+   40 div_operation: INTNUM DIVISION . ID
+   41              | INTNUM DIVISION . INTNUM
+   42              | INTNUM DIVISION . FLOATNUM
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+    ID        shift, and go to state 68
+    INTNUM    shift, and go to state 69
+    FLOATNUM  shift, and go to state 70
 
-    multiplicative_expression  go to state 41
-    primary_expression         go to state 12
 
+State 33
 
-state 26
+   49 mod_operation: INTNUM MOD . ID
+   50              | INTNUM MOD . INTNUM
+   51              | INTNUM MOD . FLOATNUM
 
-   16 additive_expression: additive_expression SUBTRACTION . multiplicative_expression
+    ID        shift, and go to state 71
+    INTNUM    shift, and go to state 72
+    FLOATNUM  shift, and go to state 73
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
 
-    multiplicative_expression  go to state 42
-    primary_expression         go to state 12
+State 34
 
+   16 sum_operation: FLOATNUM ADDITION . ID
+   17              | FLOATNUM ADDITION . INTNUM
+   18              | FLOATNUM ADDITION . FLOATNUM
 
-state 27
+    ID        shift, and go to state 74
+    INTNUM    shift, and go to state 75
+    FLOATNUM  shift, and go to state 76
 
-   18 multiplicative_expression: multiplicative_expression MULTIPLICATION . primary_expression
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+State 35
 
-    primary_expression  go to state 43
+   25 sub_operation: FLOATNUM SUBTRACTION . ID
+   26              | FLOATNUM SUBTRACTION . INTNUM
+   27              | FLOATNUM SUBTRACTION . FLOATNUM
 
+    ID        shift, and go to state 77
+    INTNUM    shift, and go to state 78
+    FLOATNUM  shift, and go to state 79
 
-state 28
 
-   19 multiplicative_expression: multiplicative_expression DIVISION . primary_expression
+State 36
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+   34 mult_operation: FLOATNUM MULTIPLICATION . ID
+   35               | FLOATNUM MULTIPLICATION . INTNUM
+   36               | FLOATNUM MULTIPLICATION . FLOATNUM
 
-    primary_expression  go to state 44
+    ID        shift, and go to state 80
+    INTNUM    shift, and go to state 81
+    FLOATNUM  shift, and go to state 82
 
 
-state 29
+State 37
 
-   20 multiplicative_expression: multiplicative_expression MOD . primary_expression
+   43 div_operation: FLOATNUM DIVISION . ID
+   44              | FLOATNUM DIVISION . INTNUM
+   45              | FLOATNUM DIVISION . FLOATNUM
 
-    ID      shift, and go to state 3
-    LPAREN  shift, and go to state 4
-    NUMBER  shift, and go to state 5
+    ID        shift, and go to state 83
+    INTNUM    shift, and go to state 84
+    FLOATNUM  shift, and go to state 85
 
-    primary_expression  go to state 45
 
+State 38
 
-state 30
+   52 mod_operation: FLOATNUM MOD . ID
+   53              | FLOATNUM MOD . INTNUM
+   54              | FLOATNUM MOD . FLOATNUM
 
-   25 expression_statement: expression SEMI .
+    ID        shift, and go to state 86
+    INTNUM    shift, and go to state 87
+    FLOATNUM  shift, and go to state 88
 
-    $default  reduce using rule 25 (expression_statement)
 
+State 39
 
-state 31
+  120 selection_statement: SELECTION_IF LPAREN . conditional_expression RPAREN LBRACE statement_list RBRACE
+  121                    | SELECTION_IF LPAREN . conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
 
-    1 program: HOWDY_PARTNER expression_statement SO_LONG_PARTNER .
+    ID        shift, and go to state 89
+    INTNUM    shift, and go to state 90
+    FLOATNUM  shift, and go to state 91
+
+    equality_expression      go to state 92
+    inequality_expression    go to state 93
+    lessthan_expression      go to state 94
+    greaterthan_expression   go to state 95
+    lessequal_expression     go to state 96
+    greaterequal_expression  go to state 97
+    conditional_expression   go to state 98
+
+
+State 40
+
+    1 program: HOWDY_PARTNER statement_list SO_LONG_PARTNER .
 
     $default  reduce using rule 1 (program)
 
 
-state 32
+State 41
 
-   22 primary_expression: LPAREN expression RPAREN .
+    6 statement_list: statement_list statement .
 
-    $default  reduce using rule 22 (primary_expression)
+    $default  reduce using rule 6 (statement_list)
 
 
-state 33
+State 42
 
-    3 logical_or_expression: logical_or_expression OR logical_and_expression .
-    5 logical_and_expression: logical_and_expression . AND equality_expression
+    2 statement: definition_statement SEMI .
 
-    AND  shift, and go to state 18
+    $default  reduce using rule 2 (statement)
 
-    $default  reduce using rule 3 (logical_or_expression)
 
+State 43
 
-state 34
+    3 statement: arithmetic_operation SEMI .
 
-    5 logical_and_expression: logical_and_expression AND equality_expression .
-    7 equality_expression: equality_expression . EQUALS relational_expression
-    8                    | equality_expression . NOT_EQUALS relational_expression
+    $default  reduce using rule 3 (statement)
 
-    EQUALS      shift, and go to state 19
-    NOT_EQUALS  shift, and go to state 20
 
-    $default  reduce using rule 5 (logical_and_expression)
+State 44
 
+   10 sum_operation: ID ADDITION ID .
 
-state 35
+    $default  reduce using rule 10 (sum_operation)
 
-    7 equality_expression: equality_expression EQUALS relational_expression .
-   10 relational_expression: relational_expression . LESS_THAN additive_expression
-   11                      | relational_expression . GREATER_THAN additive_expression
-   12                      | relational_expression . LESS_EQUAL additive_expression
-   13                      | relational_expression . GREATER_EQUAL additive_expression
 
-    LESS_THAN      shift, and go to state 21
-    GREATER_THAN   shift, and go to state 22
-    LESS_EQUAL     shift, and go to state 23
-    GREATER_EQUAL  shift, and go to state 24
+State 45
 
-    $default  reduce using rule 7 (equality_expression)
+   11 sum_operation: ID ADDITION INTNUM .
 
+    $default  reduce using rule 11 (sum_operation)
 
-state 36
 
-    8 equality_expression: equality_expression NOT_EQUALS relational_expression .
-   10 relational_expression: relational_expression . LESS_THAN additive_expression
-   11                      | relational_expression . GREATER_THAN additive_expression
-   12                      | relational_expression . LESS_EQUAL additive_expression
-   13                      | relational_expression . GREATER_EQUAL additive_expression
+State 46
 
-    LESS_THAN      shift, and go to state 21
-    GREATER_THAN   shift, and go to state 22
-    LESS_EQUAL     shift, and go to state 23
-    GREATER_EQUAL  shift, and go to state 24
+   12 sum_operation: ID ADDITION FLOATNUM .
 
-    $default  reduce using rule 8 (equality_expression)
+    $default  reduce using rule 12 (sum_operation)
 
 
-state 37
+State 47
 
-   10 relational_expression: relational_expression LESS_THAN additive_expression .
-   15 additive_expression: additive_expression . ADDITION multiplicative_expression
-   16                    | additive_expression . SUBTRACTION multiplicative_expression
+   19 sub_operation: ID SUBTRACTION ID .
 
-    ADDITION     shift, and go to state 25
-    SUBTRACTION  shift, and go to state 26
+    $default  reduce using rule 19 (sub_operation)
 
-    $default  reduce using rule 10 (relational_expression)
 
+State 48
 
-state 38
+   20 sub_operation: ID SUBTRACTION INTNUM .
 
-   11 relational_expression: relational_expression GREATER_THAN additive_expression .
-   15 additive_expression: additive_expression . ADDITION multiplicative_expression
-   16                    | additive_expression . SUBTRACTION multiplicative_expression
+    $default  reduce using rule 20 (sub_operation)
 
-    ADDITION     shift, and go to state 25
-    SUBTRACTION  shift, and go to state 26
 
-    $default  reduce using rule 11 (relational_expression)
+State 49
 
+   21 sub_operation: ID SUBTRACTION FLOATNUM .
 
-state 39
+    $default  reduce using rule 21 (sub_operation)
 
-   12 relational_expression: relational_expression LESS_EQUAL additive_expression .
-   15 additive_expression: additive_expression . ADDITION multiplicative_expression
-   16                    | additive_expression . SUBTRACTION multiplicative_expression
 
-    ADDITION     shift, and go to state 25
-    SUBTRACTION  shift, and go to state 26
+State 50
 
-    $default  reduce using rule 12 (relational_expression)
+   28 mult_operation: ID MULTIPLICATION ID .
 
+    $default  reduce using rule 28 (mult_operation)
 
-state 40
 
-   13 relational_expression: relational_expression GREATER_EQUAL additive_expression .
-   15 additive_expression: additive_expression . ADDITION multiplicative_expression
-   16                    | additive_expression . SUBTRACTION multiplicative_expression
+State 51
 
-    ADDITION     shift, and go to state 25
-    SUBTRACTION  shift, and go to state 26
+   29 mult_operation: ID MULTIPLICATION INTNUM .
 
-    $default  reduce using rule 13 (relational_expression)
+    $default  reduce using rule 29 (mult_operation)
 
 
-state 41
+State 52
 
-   15 additive_expression: additive_expression ADDITION multiplicative_expression .
-   18 multiplicative_expression: multiplicative_expression . MULTIPLICATION primary_expression
-   19                          | multiplicative_expression . DIVISION primary_expression
-   20                          | multiplicative_expression . MOD primary_expression
+   30 mult_operation: ID MULTIPLICATION FLOATNUM .
 
-    MULTIPLICATION  shift, and go to state 27
-    DIVISION        shift, and go to state 28
-    MOD             shift, and go to state 29
+    $default  reduce using rule 30 (mult_operation)
 
-    $default  reduce using rule 15 (additive_expression)
 
+State 53
 
-state 42
+   37 div_operation: ID DIVISION ID .
 
-   16 additive_expression: additive_expression SUBTRACTION multiplicative_expression .
-   18 multiplicative_expression: multiplicative_expression . MULTIPLICATION primary_expression
-   19                          | multiplicative_expression . DIVISION primary_expression
-   20                          | multiplicative_expression . MOD primary_expression
+    $default  reduce using rule 37 (div_operation)
 
-    MULTIPLICATION  shift, and go to state 27
-    DIVISION        shift, and go to state 28
-    MOD             shift, and go to state 29
 
-    $default  reduce using rule 16 (additive_expression)
+State 54
 
+   38 div_operation: ID DIVISION INTNUM .
 
-state 43
+    $default  reduce using rule 38 (div_operation)
 
-   18 multiplicative_expression: multiplicative_expression MULTIPLICATION primary_expression .
 
-    $default  reduce using rule 18 (multiplicative_expression)
+State 55
 
+   39 div_operation: ID DIVISION FLOATNUM .
 
-state 44
+    $default  reduce using rule 39 (div_operation)
 
-   19 multiplicative_expression: multiplicative_expression DIVISION primary_expression .
 
-    $default  reduce using rule 19 (multiplicative_expression)
+State 56
 
+   46 mod_operation: ID MOD ID .
 
-state 45
+    $default  reduce using rule 46 (mod_operation)
 
-   20 multiplicative_expression: multiplicative_expression MOD primary_expression .
 
-    $default  reduce using rule 20 (multiplicative_expression)
+State 57
+
+   47 mod_operation: ID MOD INTNUM .
+
+    $default  reduce using rule 47 (mod_operation)
+
+
+State 58
+
+   48 mod_operation: ID MOD FLOATNUM .
+
+    $default  reduce using rule 48 (mod_operation)
+
+
+State 59
+
+   13 sum_operation: INTNUM ADDITION ID .
+
+    $default  reduce using rule 13 (sum_operation)
+
+
+State 60
+
+   14 sum_operation: INTNUM ADDITION INTNUM .
+
+    $default  reduce using rule 14 (sum_operation)
+
+
+State 61
+
+   15 sum_operation: INTNUM ADDITION FLOATNUM .
+
+    $default  reduce using rule 15 (sum_operation)
+
+
+State 62
+
+   22 sub_operation: INTNUM SUBTRACTION ID .
+
+    $default  reduce using rule 22 (sub_operation)
+
+
+State 63
+
+   23 sub_operation: INTNUM SUBTRACTION INTNUM .
+
+    $default  reduce using rule 23 (sub_operation)
+
+
+State 64
+
+   24 sub_operation: INTNUM SUBTRACTION FLOATNUM .
+
+    $default  reduce using rule 24 (sub_operation)
+
+
+State 65
+
+   31 mult_operation: INTNUM MULTIPLICATION ID .
+
+    $default  reduce using rule 31 (mult_operation)
+
+
+State 66
+
+   32 mult_operation: INTNUM MULTIPLICATION INTNUM .
+
+    $default  reduce using rule 32 (mult_operation)
+
+
+State 67
+
+   33 mult_operation: INTNUM MULTIPLICATION FLOATNUM .
+
+    $default  reduce using rule 33 (mult_operation)
+
+
+State 68
+
+   40 div_operation: INTNUM DIVISION ID .
+
+    $default  reduce using rule 40 (div_operation)
+
+
+State 69
+
+   41 div_operation: INTNUM DIVISION INTNUM .
+
+    $default  reduce using rule 41 (div_operation)
+
+
+State 70
+
+   42 div_operation: INTNUM DIVISION FLOATNUM .
+
+    $default  reduce using rule 42 (div_operation)
+
+
+State 71
+
+   49 mod_operation: INTNUM MOD ID .
+
+    $default  reduce using rule 49 (mod_operation)
+
+
+State 72
+
+   50 mod_operation: INTNUM MOD INTNUM .
+
+    $default  reduce using rule 50 (mod_operation)
+
+
+State 73
+
+   51 mod_operation: INTNUM MOD FLOATNUM .
+
+    $default  reduce using rule 51 (mod_operation)
+
+
+State 74
+
+   16 sum_operation: FLOATNUM ADDITION ID .
+
+    $default  reduce using rule 16 (sum_operation)
+
+
+State 75
+
+   17 sum_operation: FLOATNUM ADDITION INTNUM .
+
+    $default  reduce using rule 17 (sum_operation)
+
+
+State 76
+
+   18 sum_operation: FLOATNUM ADDITION FLOATNUM .
+
+    $default  reduce using rule 18 (sum_operation)
+
+
+State 77
+
+   25 sub_operation: FLOATNUM SUBTRACTION ID .
+
+    $default  reduce using rule 25 (sub_operation)
+
+
+State 78
+
+   26 sub_operation: FLOATNUM SUBTRACTION INTNUM .
+
+    $default  reduce using rule 26 (sub_operation)
+
+
+State 79
+
+   27 sub_operation: FLOATNUM SUBTRACTION FLOATNUM .
+
+    $default  reduce using rule 27 (sub_operation)
+
+
+State 80
+
+   34 mult_operation: FLOATNUM MULTIPLICATION ID .
+
+    $default  reduce using rule 34 (mult_operation)
+
+
+State 81
+
+   35 mult_operation: FLOATNUM MULTIPLICATION INTNUM .
+
+    $default  reduce using rule 35 (mult_operation)
+
+
+State 82
+
+   36 mult_operation: FLOATNUM MULTIPLICATION FLOATNUM .
+
+    $default  reduce using rule 36 (mult_operation)
+
+
+State 83
+
+   43 div_operation: FLOATNUM DIVISION ID .
+
+    $default  reduce using rule 43 (div_operation)
+
+
+State 84
+
+   44 div_operation: FLOATNUM DIVISION INTNUM .
+
+    $default  reduce using rule 44 (div_operation)
+
+
+State 85
+
+   45 div_operation: FLOATNUM DIVISION FLOATNUM .
+
+    $default  reduce using rule 45 (div_operation)
+
+
+State 86
+
+   52 mod_operation: FLOATNUM MOD ID .
+
+    $default  reduce using rule 52 (mod_operation)
+
+
+State 87
+
+   53 mod_operation: FLOATNUM MOD INTNUM .
+
+    $default  reduce using rule 53 (mod_operation)
+
+
+State 88
+
+   54 mod_operation: FLOATNUM MOD FLOATNUM .
+
+    $default  reduce using rule 54 (mod_operation)
+
+
+State 89
+
+   60 equality_expression: ID . EQUALS ID
+   61                    | ID . EQUALS INTNUM
+   62                    | ID . EQUALS FLOATNUM
+   69 inequality_expression: ID . NOT_EQUALS ID
+   70                      | ID . NOT_EQUALS INTNUM
+   71                      | ID . NOT_EQUALS FLOATNUM
+   78 lessthan_expression: ID . LESS_THAN ID
+   79                    | ID . LESS_THAN INTNUM
+   80                    | ID . LESS_THAN FLOATNUM
+   87 greaterthan_expression: ID . GREATER_THAN ID
+   88                       | ID . GREATER_THAN INTNUM
+   89                       | ID . GREATER_THAN FLOATNUM
+   96 lessequal_expression: ID . LESS_EQUAL ID
+   97                     | ID . LESS_EQUAL INTNUM
+   98                     | ID . LESS_EQUAL FLOATNUM
+  105 greaterequal_expression: ID . GREATER_EQUAL ID
+  106                        | ID . GREATER_EQUAL INTNUM
+  107                        | ID . GREATER_EQUAL FLOATNUM
+
+    EQUALS         shift, and go to state 99
+    NOT_EQUALS     shift, and go to state 100
+    LESS_THAN      shift, and go to state 101
+    GREATER_THAN   shift, and go to state 102
+    LESS_EQUAL     shift, and go to state 103
+    GREATER_EQUAL  shift, and go to state 104
+
+
+State 90
+
+   63 equality_expression: INTNUM . EQUALS ID
+   64                    | INTNUM . EQUALS INTNUM
+   65                    | INTNUM . EQUALS FLOATNUM
+   72 inequality_expression: INTNUM . NOT_EQUALS ID
+   73                      | INTNUM . NOT_EQUALS INTNUM
+   74                      | INTNUM . NOT_EQUALS FLOATNUM
+   81 lessthan_expression: INTNUM . LESS_THAN ID
+   82                    | INTNUM . LESS_THAN INTNUM
+   83                    | INTNUM . LESS_THAN FLOATNUM
+   90 greaterthan_expression: INTNUM . GREATER_THAN ID
+   91                       | INTNUM . GREATER_THAN INTNUM
+   92                       | INTNUM . GREATER_THAN FLOATNUM
+   99 lessequal_expression: INTNUM . LESS_EQUAL ID
+  100                     | INTNUM . LESS_EQUAL INTNUM
+  101                     | INTNUM . LESS_EQUAL FLOATNUM
+  108 greaterequal_expression: INTNUM . GREATER_EQUAL ID
+  109                        | INTNUM . GREATER_EQUAL INTNUM
+  110                        | INTNUM . GREATER_EQUAL FLOATNUM
+
+    EQUALS         shift, and go to state 105
+    NOT_EQUALS     shift, and go to state 106
+    LESS_THAN      shift, and go to state 107
+    GREATER_THAN   shift, and go to state 108
+    LESS_EQUAL     shift, and go to state 109
+    GREATER_EQUAL  shift, and go to state 110
+
+
+State 91
+
+   66 equality_expression: FLOATNUM . EQUALS ID
+   67                    | FLOATNUM . EQUALS INTNUM
+   68                    | FLOATNUM . EQUALS FLOATNUM
+   75 inequality_expression: FLOATNUM . NOT_EQUALS ID
+   76                      | FLOATNUM . NOT_EQUALS INTNUM
+   77                      | FLOATNUM . NOT_EQUALS FLOATNUM
+   84 lessthan_expression: FLOATNUM . LESS_THAN ID
+   85                    | FLOATNUM . LESS_THAN INTNUM
+   86                    | FLOATNUM . LESS_THAN FLOATNUM
+   93 greaterthan_expression: FLOATNUM . GREATER_THAN ID
+   94                       | FLOATNUM . GREATER_THAN INTNUM
+   95                       | FLOATNUM . GREATER_THAN FLOATNUM
+  102 lessequal_expression: FLOATNUM . LESS_EQUAL ID
+  103                     | FLOATNUM . LESS_EQUAL INTNUM
+  104                     | FLOATNUM . LESS_EQUAL FLOATNUM
+  111 greaterequal_expression: FLOATNUM . GREATER_EQUAL ID
+  112                        | FLOATNUM . GREATER_EQUAL INTNUM
+  113                        | FLOATNUM . GREATER_EQUAL FLOATNUM
+
+    EQUALS         shift, and go to state 111
+    NOT_EQUALS     shift, and go to state 112
+    LESS_THAN      shift, and go to state 113
+    GREATER_THAN   shift, and go to state 114
+    LESS_EQUAL     shift, and go to state 115
+    GREATER_EQUAL  shift, and go to state 116
+
+
+State 92
+
+  114 conditional_expression: equality_expression .
+
+    $default  reduce using rule 114 (conditional_expression)
+
+
+State 93
+
+  115 conditional_expression: inequality_expression .
+
+    $default  reduce using rule 115 (conditional_expression)
+
+
+State 94
+
+  116 conditional_expression: lessthan_expression .
+
+    $default  reduce using rule 116 (conditional_expression)
+
+
+State 95
+
+  117 conditional_expression: greaterthan_expression .
+
+    $default  reduce using rule 117 (conditional_expression)
+
+
+State 96
+
+  118 conditional_expression: lessequal_expression .
+
+    $default  reduce using rule 118 (conditional_expression)
+
+
+State 97
+
+  119 conditional_expression: greaterequal_expression .
+
+    $default  reduce using rule 119 (conditional_expression)
+
+
+State 98
+
+  120 selection_statement: SELECTION_IF LPAREN conditional_expression . RPAREN LBRACE statement_list RBRACE
+  121                    | SELECTION_IF LPAREN conditional_expression . RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
+
+    RPAREN  shift, and go to state 117
+
+
+State 99
+
+   60 equality_expression: ID EQUALS . ID
+   61                    | ID EQUALS . INTNUM
+   62                    | ID EQUALS . FLOATNUM
+
+    ID        shift, and go to state 118
+    INTNUM    shift, and go to state 119
+    FLOATNUM  shift, and go to state 120
+
+
+State 100
+
+   69 inequality_expression: ID NOT_EQUALS . ID
+   70                      | ID NOT_EQUALS . INTNUM
+   71                      | ID NOT_EQUALS . FLOATNUM
+
+    ID        shift, and go to state 121
+    INTNUM    shift, and go to state 122
+    FLOATNUM  shift, and go to state 123
+
+
+State 101
+
+   78 lessthan_expression: ID LESS_THAN . ID
+   79                    | ID LESS_THAN . INTNUM
+   80                    | ID LESS_THAN . FLOATNUM
+
+    ID        shift, and go to state 124
+    INTNUM    shift, and go to state 125
+    FLOATNUM  shift, and go to state 126
+
+
+State 102
+
+   87 greaterthan_expression: ID GREATER_THAN . ID
+   88                       | ID GREATER_THAN . INTNUM
+   89                       | ID GREATER_THAN . FLOATNUM
+
+    ID        shift, and go to state 127
+    INTNUM    shift, and go to state 128
+    FLOATNUM  shift, and go to state 129
+
+
+State 103
+
+   96 lessequal_expression: ID LESS_EQUAL . ID
+   97                     | ID LESS_EQUAL . INTNUM
+   98                     | ID LESS_EQUAL . FLOATNUM
+
+    ID        shift, and go to state 130
+    INTNUM    shift, and go to state 131
+    FLOATNUM  shift, and go to state 132
+
+
+State 104
+
+  105 greaterequal_expression: ID GREATER_EQUAL . ID
+  106                        | ID GREATER_EQUAL . INTNUM
+  107                        | ID GREATER_EQUAL . FLOATNUM
+
+    ID        shift, and go to state 133
+    INTNUM    shift, and go to state 134
+    FLOATNUM  shift, and go to state 135
+
+
+State 105
+
+   63 equality_expression: INTNUM EQUALS . ID
+   64                    | INTNUM EQUALS . INTNUM
+   65                    | INTNUM EQUALS . FLOATNUM
+
+    ID        shift, and go to state 136
+    INTNUM    shift, and go to state 137
+    FLOATNUM  shift, and go to state 138
+
+
+State 106
+
+   72 inequality_expression: INTNUM NOT_EQUALS . ID
+   73                      | INTNUM NOT_EQUALS . INTNUM
+   74                      | INTNUM NOT_EQUALS . FLOATNUM
+
+    ID        shift, and go to state 139
+    INTNUM    shift, and go to state 140
+    FLOATNUM  shift, and go to state 141
+
+
+State 107
+
+   81 lessthan_expression: INTNUM LESS_THAN . ID
+   82                    | INTNUM LESS_THAN . INTNUM
+   83                    | INTNUM LESS_THAN . FLOATNUM
+
+    ID        shift, and go to state 142
+    INTNUM    shift, and go to state 143
+    FLOATNUM  shift, and go to state 144
+
+
+State 108
+
+   90 greaterthan_expression: INTNUM GREATER_THAN . ID
+   91                       | INTNUM GREATER_THAN . INTNUM
+   92                       | INTNUM GREATER_THAN . FLOATNUM
+
+    ID        shift, and go to state 145
+    INTNUM    shift, and go to state 146
+    FLOATNUM  shift, and go to state 147
+
+
+State 109
+
+   99 lessequal_expression: INTNUM LESS_EQUAL . ID
+  100                     | INTNUM LESS_EQUAL . INTNUM
+  101                     | INTNUM LESS_EQUAL . FLOATNUM
+
+    ID        shift, and go to state 148
+    INTNUM    shift, and go to state 149
+    FLOATNUM  shift, and go to state 150
+
+
+State 110
+
+  108 greaterequal_expression: INTNUM GREATER_EQUAL . ID
+  109                        | INTNUM GREATER_EQUAL . INTNUM
+  110                        | INTNUM GREATER_EQUAL . FLOATNUM
+
+    ID        shift, and go to state 151
+    INTNUM    shift, and go to state 152
+    FLOATNUM  shift, and go to state 153
+
+
+State 111
+
+   66 equality_expression: FLOATNUM EQUALS . ID
+   67                    | FLOATNUM EQUALS . INTNUM
+   68                    | FLOATNUM EQUALS . FLOATNUM
+
+    ID        shift, and go to state 154
+    INTNUM    shift, and go to state 155
+    FLOATNUM  shift, and go to state 156
+
+
+State 112
+
+   75 inequality_expression: FLOATNUM NOT_EQUALS . ID
+   76                      | FLOATNUM NOT_EQUALS . INTNUM
+   77                      | FLOATNUM NOT_EQUALS . FLOATNUM
+
+    ID        shift, and go to state 157
+    INTNUM    shift, and go to state 158
+    FLOATNUM  shift, and go to state 159
+
+
+State 113
+
+   84 lessthan_expression: FLOATNUM LESS_THAN . ID
+   85                    | FLOATNUM LESS_THAN . INTNUM
+   86                    | FLOATNUM LESS_THAN . FLOATNUM
+
+    ID        shift, and go to state 160
+    INTNUM    shift, and go to state 161
+    FLOATNUM  shift, and go to state 162
+
+
+State 114
+
+   93 greaterthan_expression: FLOATNUM GREATER_THAN . ID
+   94                       | FLOATNUM GREATER_THAN . INTNUM
+   95                       | FLOATNUM GREATER_THAN . FLOATNUM
+
+    ID        shift, and go to state 163
+    INTNUM    shift, and go to state 164
+    FLOATNUM  shift, and go to state 165
+
+
+State 115
+
+  102 lessequal_expression: FLOATNUM LESS_EQUAL . ID
+  103                     | FLOATNUM LESS_EQUAL . INTNUM
+  104                     | FLOATNUM LESS_EQUAL . FLOATNUM
+
+    ID        shift, and go to state 166
+    INTNUM    shift, and go to state 167
+    FLOATNUM  shift, and go to state 168
+
+
+State 116
+
+  111 greaterequal_expression: FLOATNUM GREATER_EQUAL . ID
+  112                        | FLOATNUM GREATER_EQUAL . INTNUM
+  113                        | FLOATNUM GREATER_EQUAL . FLOATNUM
+
+    ID        shift, and go to state 169
+    INTNUM    shift, and go to state 170
+    FLOATNUM  shift, and go to state 171
+
+
+State 117
+
+  120 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN . LBRACE statement_list RBRACE
+  121                    | SELECTION_IF LPAREN conditional_expression RPAREN . LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
+
+    LBRACE  shift, and go to state 172
+
+
+State 118
+
+   60 equality_expression: ID EQUALS ID .
+
+    $default  reduce using rule 60 (equality_expression)
+
+
+State 119
+
+   61 equality_expression: ID EQUALS INTNUM .
+
+    $default  reduce using rule 61 (equality_expression)
+
+
+State 120
+
+   62 equality_expression: ID EQUALS FLOATNUM .
+
+    $default  reduce using rule 62 (equality_expression)
+
+
+State 121
+
+   69 inequality_expression: ID NOT_EQUALS ID .
+
+    $default  reduce using rule 69 (inequality_expression)
+
+
+State 122
+
+   70 inequality_expression: ID NOT_EQUALS INTNUM .
+
+    $default  reduce using rule 70 (inequality_expression)
+
+
+State 123
+
+   71 inequality_expression: ID NOT_EQUALS FLOATNUM .
+
+    $default  reduce using rule 71 (inequality_expression)
+
+
+State 124
+
+   78 lessthan_expression: ID LESS_THAN ID .
+
+    $default  reduce using rule 78 (lessthan_expression)
+
+
+State 125
+
+   79 lessthan_expression: ID LESS_THAN INTNUM .
+
+    $default  reduce using rule 79 (lessthan_expression)
+
+
+State 126
+
+   80 lessthan_expression: ID LESS_THAN FLOATNUM .
+
+    $default  reduce using rule 80 (lessthan_expression)
+
+
+State 127
+
+   87 greaterthan_expression: ID GREATER_THAN ID .
+
+    $default  reduce using rule 87 (greaterthan_expression)
+
+
+State 128
+
+   88 greaterthan_expression: ID GREATER_THAN INTNUM .
+
+    $default  reduce using rule 88 (greaterthan_expression)
+
+
+State 129
+
+   89 greaterthan_expression: ID GREATER_THAN FLOATNUM .
+
+    $default  reduce using rule 89 (greaterthan_expression)
+
+
+State 130
+
+   96 lessequal_expression: ID LESS_EQUAL ID .
+
+    $default  reduce using rule 96 (lessequal_expression)
+
+
+State 131
+
+   97 lessequal_expression: ID LESS_EQUAL INTNUM .
+
+    $default  reduce using rule 97 (lessequal_expression)
+
+
+State 132
+
+   98 lessequal_expression: ID LESS_EQUAL FLOATNUM .
+
+    $default  reduce using rule 98 (lessequal_expression)
+
+
+State 133
+
+  105 greaterequal_expression: ID GREATER_EQUAL ID .
+
+    $default  reduce using rule 105 (greaterequal_expression)
+
+
+State 134
+
+  106 greaterequal_expression: ID GREATER_EQUAL INTNUM .
+
+    $default  reduce using rule 106 (greaterequal_expression)
+
+
+State 135
+
+  107 greaterequal_expression: ID GREATER_EQUAL FLOATNUM .
+
+    $default  reduce using rule 107 (greaterequal_expression)
+
+
+State 136
+
+   63 equality_expression: INTNUM EQUALS ID .
+
+    $default  reduce using rule 63 (equality_expression)
+
+
+State 137
+
+   64 equality_expression: INTNUM EQUALS INTNUM .
+
+    $default  reduce using rule 64 (equality_expression)
+
+
+State 138
+
+   65 equality_expression: INTNUM EQUALS FLOATNUM .
+
+    $default  reduce using rule 65 (equality_expression)
+
+
+State 139
+
+   72 inequality_expression: INTNUM NOT_EQUALS ID .
+
+    $default  reduce using rule 72 (inequality_expression)
+
+
+State 140
+
+   73 inequality_expression: INTNUM NOT_EQUALS INTNUM .
+
+    $default  reduce using rule 73 (inequality_expression)
+
+
+State 141
+
+   74 inequality_expression: INTNUM NOT_EQUALS FLOATNUM .
+
+    $default  reduce using rule 74 (inequality_expression)
+
+
+State 142
+
+   81 lessthan_expression: INTNUM LESS_THAN ID .
+
+    $default  reduce using rule 81 (lessthan_expression)
+
+
+State 143
+
+   82 lessthan_expression: INTNUM LESS_THAN INTNUM .
+
+    $default  reduce using rule 82 (lessthan_expression)
+
+
+State 144
+
+   83 lessthan_expression: INTNUM LESS_THAN FLOATNUM .
+
+    $default  reduce using rule 83 (lessthan_expression)
+
+
+State 145
+
+   90 greaterthan_expression: INTNUM GREATER_THAN ID .
+
+    $default  reduce using rule 90 (greaterthan_expression)
+
+
+State 146
+
+   91 greaterthan_expression: INTNUM GREATER_THAN INTNUM .
+
+    $default  reduce using rule 91 (greaterthan_expression)
+
+
+State 147
+
+   92 greaterthan_expression: INTNUM GREATER_THAN FLOATNUM .
+
+    $default  reduce using rule 92 (greaterthan_expression)
+
+
+State 148
+
+   99 lessequal_expression: INTNUM LESS_EQUAL ID .
+
+    $default  reduce using rule 99 (lessequal_expression)
+
+
+State 149
+
+  100 lessequal_expression: INTNUM LESS_EQUAL INTNUM .
+
+    $default  reduce using rule 100 (lessequal_expression)
+
+
+State 150
+
+  101 lessequal_expression: INTNUM LESS_EQUAL FLOATNUM .
+
+    $default  reduce using rule 101 (lessequal_expression)
+
+
+State 151
+
+  108 greaterequal_expression: INTNUM GREATER_EQUAL ID .
+
+    $default  reduce using rule 108 (greaterequal_expression)
+
+
+State 152
+
+  109 greaterequal_expression: INTNUM GREATER_EQUAL INTNUM .
+
+    $default  reduce using rule 109 (greaterequal_expression)
+
+
+State 153
+
+  110 greaterequal_expression: INTNUM GREATER_EQUAL FLOATNUM .
+
+    $default  reduce using rule 110 (greaterequal_expression)
+
+
+State 154
+
+   66 equality_expression: FLOATNUM EQUALS ID .
+
+    $default  reduce using rule 66 (equality_expression)
+
+
+State 155
+
+   67 equality_expression: FLOATNUM EQUALS INTNUM .
+
+    $default  reduce using rule 67 (equality_expression)
+
+
+State 156
+
+   68 equality_expression: FLOATNUM EQUALS FLOATNUM .
+
+    $default  reduce using rule 68 (equality_expression)
+
+
+State 157
+
+   75 inequality_expression: FLOATNUM NOT_EQUALS ID .
+
+    $default  reduce using rule 75 (inequality_expression)
+
+
+State 158
+
+   76 inequality_expression: FLOATNUM NOT_EQUALS INTNUM .
+
+    $default  reduce using rule 76 (inequality_expression)
+
+
+State 159
+
+   77 inequality_expression: FLOATNUM NOT_EQUALS FLOATNUM .
+
+    $default  reduce using rule 77 (inequality_expression)
+
+
+State 160
+
+   84 lessthan_expression: FLOATNUM LESS_THAN ID .
+
+    $default  reduce using rule 84 (lessthan_expression)
+
+
+State 161
+
+   85 lessthan_expression: FLOATNUM LESS_THAN INTNUM .
+
+    $default  reduce using rule 85 (lessthan_expression)
+
+
+State 162
+
+   86 lessthan_expression: FLOATNUM LESS_THAN FLOATNUM .
+
+    $default  reduce using rule 86 (lessthan_expression)
+
+
+State 163
+
+   93 greaterthan_expression: FLOATNUM GREATER_THAN ID .
+
+    $default  reduce using rule 93 (greaterthan_expression)
+
+
+State 164
+
+   94 greaterthan_expression: FLOATNUM GREATER_THAN INTNUM .
+
+    $default  reduce using rule 94 (greaterthan_expression)
+
+
+State 165
+
+   95 greaterthan_expression: FLOATNUM GREATER_THAN FLOATNUM .
+
+    $default  reduce using rule 95 (greaterthan_expression)
+
+
+State 166
+
+  102 lessequal_expression: FLOATNUM LESS_EQUAL ID .
+
+    $default  reduce using rule 102 (lessequal_expression)
+
+
+State 167
+
+  103 lessequal_expression: FLOATNUM LESS_EQUAL INTNUM .
+
+    $default  reduce using rule 103 (lessequal_expression)
+
+
+State 168
+
+  104 lessequal_expression: FLOATNUM LESS_EQUAL FLOATNUM .
+
+    $default  reduce using rule 104 (lessequal_expression)
+
+
+State 169
+
+  111 greaterequal_expression: FLOATNUM GREATER_EQUAL ID .
+
+    $default  reduce using rule 111 (greaterequal_expression)
+
+
+State 170
+
+  112 greaterequal_expression: FLOATNUM GREATER_EQUAL INTNUM .
+
+    $default  reduce using rule 112 (greaterequal_expression)
+
+
+State 171
+
+  113 greaterequal_expression: FLOATNUM GREATER_EQUAL FLOATNUM .
+
+    $default  reduce using rule 113 (greaterequal_expression)
+
+
+State 172
+
+  120 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE . statement_list RBRACE
+  121                    | SELECTION_IF LPAREN conditional_expression RPAREN LBRACE . statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
+
+    ID            shift, and go to state 3
+    INT           shift, and go to state 4
+    FLOAT         shift, and go to state 5
+    CHAR          shift, and go to state 6
+    INTNUM        shift, and go to state 7
+    FLOATNUM      shift, and go to state 8
+    SELECTION_IF  shift, and go to state 9
+
+    statement             go to state 10
+    statement_list        go to state 173
+    definition_statement  go to state 12
+    sum_operation         go to state 13
+    sub_operation         go to state 14
+    mult_operation        go to state 15
+    div_operation         go to state 16
+    mod_operation         go to state 17
+    arithmetic_operation  go to state 18
+    selection_statement   go to state 19
+
+
+State 173
+
+    6 statement_list: statement_list . statement
+  120 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list . RBRACE
+  121                    | SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list . RBRACE SELECTION_ELSE LBRACE statement_list RBRACE
+
+    ID            shift, and go to state 3
+    INT           shift, and go to state 4
+    FLOAT         shift, and go to state 5
+    CHAR          shift, and go to state 6
+    INTNUM        shift, and go to state 7
+    FLOATNUM      shift, and go to state 8
+    RBRACE        shift, and go to state 174
+    SELECTION_IF  shift, and go to state 9
+
+    statement             go to state 41
+    definition_statement  go to state 12
+    sum_operation         go to state 13
+    sub_operation         go to state 14
+    mult_operation        go to state 15
+    div_operation         go to state 16
+    mod_operation         go to state 17
+    arithmetic_operation  go to state 18
+    selection_statement   go to state 19
+
+
+State 174
+
+  120 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE .
+  121                    | SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE . SELECTION_ELSE LBRACE statement_list RBRACE
+
+    SELECTION_ELSE  shift, and go to state 175
+
+    $default  reduce using rule 120 (selection_statement)
+
+
+State 175
+
+  121 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE . LBRACE statement_list RBRACE
+
+    LBRACE  shift, and go to state 176
+
+
+State 176
+
+  121 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE . statement_list RBRACE
+
+    ID            shift, and go to state 3
+    INT           shift, and go to state 4
+    FLOAT         shift, and go to state 5
+    CHAR          shift, and go to state 6
+    INTNUM        shift, and go to state 7
+    FLOATNUM      shift, and go to state 8
+    SELECTION_IF  shift, and go to state 9
+
+    statement             go to state 10
+    statement_list        go to state 177
+    definition_statement  go to state 12
+    sum_operation         go to state 13
+    sub_operation         go to state 14
+    mult_operation        go to state 15
+    div_operation         go to state 16
+    mod_operation         go to state 17
+    arithmetic_operation  go to state 18
+    selection_statement   go to state 19
+
+
+State 177
+
+    6 statement_list: statement_list . statement
+  121 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list . RBRACE
+
+    ID            shift, and go to state 3
+    INT           shift, and go to state 4
+    FLOAT         shift, and go to state 5
+    CHAR          shift, and go to state 6
+    INTNUM        shift, and go to state 7
+    FLOATNUM      shift, and go to state 8
+    RBRACE        shift, and go to state 178
+    SELECTION_IF  shift, and go to state 9
+
+    statement             go to state 41
+    definition_statement  go to state 12
+    sum_operation         go to state 13
+    sub_operation         go to state 14
+    mult_operation        go to state 15
+    div_operation         go to state 16
+    mod_operation         go to state 17
+    arithmetic_operation  go to state 18
+    selection_statement   go to state 19
+
+
+State 178
+
+  121 selection_statement: SELECTION_IF LPAREN conditional_expression RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE .
+
+    $default  reduce using rule 121 (selection_statement)
