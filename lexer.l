@@ -10,6 +10,8 @@ int \-?[0-9]+
 float \-?[0-9]+\.[0-9]+
 id [a-zA-Z][a-zA-Z0-9_]{0,30}
 whitespace [ \t]+
+char_literal '[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\"\\-]'
+sting_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
 
 %%
 "howdy partner" {return(HOWDY_PARTNER);}
@@ -23,12 +25,14 @@ whitespace [ \t]+
 
 ";" {return(SEMI);}
 "," {return(COMMA);}
+"." {return(DOT);}
 "(" {return(LPAREN);}
 ")" {return(RPAREN);}
 "[" {return(LBRACKET);}
 "]" {return(RBRACKET);}
 "{" {return(LBRACE);}
 "}" {return(RBRACE);}
+
 
 "puh-lus" {return(ADDITION);}
 "subtrayct" {return(SUBTRACTION);}
@@ -68,6 +72,8 @@ whitespace [ \t]+
 {int} {return(INTNUM);}
 "\n" {line_number++;}
 {whitespace} {/* IGNORE */}
+{char_literal} {return(CHARLITERAL);}
+{string_literal} {return(STRINGLITERAL);}
 
 . {printf("LEXICAL ERROR: Unrecognized: %s (line %d)\n", yytext, line_number);}
 

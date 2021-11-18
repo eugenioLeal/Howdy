@@ -7,10 +7,10 @@ void yyerror(char *s);
 
 %start program
 %token HOWDY_PARTNER SO_LONG_PARTNER
-%token SEMI COMMA
+%token SEMI COMMA DOT
 %token ID INT FLOAT CHAR NUTHIN STRUCT FUNC
 %token ADDITION SUBTRACTION MULTIPLICATION DIVISION MOD LPAREN RPAREN
-%token INTNUM FLOATNUM
+%token INTNUM FLOATNUM CHARLITERAL STRINGLITERAL
 %token TRUE FALSE
 %token NOT 
 %token GETS PUTS PUTSLN
@@ -21,15 +21,23 @@ void yyerror(char *s);
 %%
 program: HOWDY_PARTNER statement_list SO_LONG_PARTNER {printf("Yeeeehaw!");}
 
-statement: definition_statement SEMI
+statement: declaration_statement SEMI
           | arithmetic_operation SEMI
           | selection_statement
+          | std_in_out_statement SEMI
+          | function_declaration
+          | function_call SEMI
+          | struct_definition
+          | struct_member_reference SEMI
+          | assignment_statement SEMI
+          | iteration_statment
+          | array_definition SEMI
           ;
 
 statement_list: statement
               | statement_list statement
 
-definition_statement: INT ID     {printf("int\n");}
+declaration_statement: INT ID     {printf("int\n");}
                     | FLOAT ID   {printf("float\n");}
                     | CHAR ID    {printf("char\n");}
                     ;
@@ -163,20 +171,137 @@ greaterequal_expression: ID GREATER_EQUAL ID
                     | FLOATNUM GREATER_EQUAL FLOATNUM
                     ;
 
-conditional_expression: LPAREN equality_expression RPAREN    {printf("IF = \n");}
-                      | LPAREN inequality_expression RPAREN  {printf("IF != \n");}
-                      | LPAREN lessthan_expression RPAREN    {printf("IF < \n");}
-                      | LPAREN greaterthan_expression RPAREN {printf("IF > \n");}
-                      | LPAREN lessequal_expression RPAREN   {printf("IF <= \n");}
-                      | LPAREN greaterequal_expression RPAREN {printf("IF >= \n");}
+conditional_expression: equality_expression    {printf("IF = \n");}
+                      | inequality_expression  {printf("IF != \n");}
+                      | lessthan_expression    {printf("IF < \n");}
+                      | greaterthan_expression {printf("IF > \n");}
+                      | lessequal_expression   {printf("IF <= \n");}
+                      | greaterequal_expression {printf("IF >= \n");}
                       ;
 
-cond_expression_list: conditional_expression
-                    | LPAREN conditional_expression
+compound_conditional: LPAREN conditional_expression RPAREN AND LPAREN conditional_expression RPAREN
+                    | LPAREN conditional_expression RPAREN OR LPAREN conditional_expression RPAREN
+                    | compound_conditional AND LPAREN conditional_expression RPAREN
+                    | compound_conditional OR LPAREN conditional_expression RPAREN
+                    | LPAREN conditional_expression RPAREN AND compound_conditional
+                    | LPAREN conditional_expression RPAREN OR compound_conditional
                     ;
 
-selection_statement: SELECTION_IF conditional_expression LBRACE statement_list RBRACE   {printf("SIMPLE IF\n");}
-                    | SELECTION_IF conditional_expression LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE {printf("IF ELSE IF\n");}
+selection_statement: SELECTION_IF LPAREN compound_conditional RPAREN LBRACE statement_list RBRACE   {printf("SIMPLE IF\n");}
+                    | SELECTION_IF LPAREN compound_conditional RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE {printf("IF ELSE IF\n");}
+
+std_in_out_statement: stdin_func      {printf("GETS\n");}
+                    | stdout_func     {printf("PUTS\n");}
+                    | stdout_ln_func  {printf("PUTSLN\n");}
+                    ;
+
+stdin_func: GETS ID
+          ;
+
+stdout_func: PUTS ID
+            | PUTS CHAR
+            | PUTS INTNUM
+            | PUTS FLOATNUM
+            ;
+
+stdout_ln_func: PUTSLN ID
+              | PUTSLN CHAR
+              | PUTSLN INTNUM
+              | PUTSLN FLOATNUM
+              ;
+
+function_declaration: FUNC ID LPAREN declaration_list RPAREN INT LBRACE statement_list RBRACE
+                    | FUNC ID LPAREN declaration_list RPAREN FLOAT LBRACE statement_list RBRACE
+                    | FUNC ID LPAREN declaration_list RPAREN CHAR LBRACE statement_list RBRACE
+                    | FUNC ID LPAREN declaration_list RPAREN NUTHIN LBRACE statement_list RBRACE
+                    ;
+
+declaration_list: declaration_statement
+                | declaration_statement COMMA declaration_list
+                ;
+
+function_call: ID LPAREN parameter_list RPAREN
+              ;
+
+parameter_list: ID
+              | ID COMMA parameter_list
+              ;
+
+struct_definition: STRUCT ID LBRACE declaration_list RBRACE
+
+struct_member_reference: ID DOT ID
+
+iteration_statment: for_loop
+                  | while_loop
+                  | dowhile_loop
+                  ;
+
+for_loop: LOOP_FOR LPAREN optional_assignment SEMI optional_conditional SEMI optional_increment RPAREN LBRACE statement_list RBRACE
+        ;
+
+optional_assignment:  assignment_statement
+                    |
+                    ;
+
+optional_conditional: conditional_expression
+                    |
+                    ;
+
+optional_increment: ID ASSIGNMENT_OPERATOR arithmetic_operation
+                  |
+                  ;
+
+while_loop: LOOP_WHILE LPAREN compound_conditional RPAREN RBRACE statement_list LBRACE
+          ;
+
+dowhile_loop: LOOP_DOWHILE LBRACE statement_list RBRACE LOOP_WHILE LPAREN compound_conditional RPAREN
+            ;
+
+
+assignment_statement: ID ASSIGNMENT_OPERATOR ID
+                    | ID ASSIGNMENT_OPERATOR FLOATNUM
+                    | ID ASSIGNMENT_OPERATOR INTNUM
+                    | ID ASSIGNMENT_OPERATOR function_call
+                    | ID ASSIGNMENT_OPERATOR arithmetic_operation
+                    | ID ASSIGNMENT_OPERATOR struct_member_reference
+                    | ID ASSIGNMENT_OPERATOR array_reference
+                    | struct_member_reference ASSIGNMENT_OPERATOR ID
+                    | struct_member_reference ASSIGNMENT_OPERATOR FLOATNUM
+                    | struct_member_reference ASSIGNMENT_OPERATOR INTNUM
+                    | struct_member_reference ASSIGNMENT_OPERATOR function_call
+                    | struct_member_reference ASSIGNMENT_OPERATOR arithmetic_operation
+                    | struct_member_reference ASSIGNMENT_OPERATOR struct_member_reference
+                    | struct_member_reference ASSIGNMENT_OPERATOR array_reference
+                    | array_reference ASSIGNMENT_OPERATOR ID
+                    | array_reference ASSIGNMENT_OPERATOR FLOATNUM
+                    | array_reference ASSIGNMENT_OPERATOR INTNUM
+                    | array_reference ASSIGNMENT_OPERATOR function_call
+                    | array_reference ASSIGNMENT_OPERATOR arithmetic_operation
+                    | array_reference ASSIGNMENT_OPERATOR struct_member_reference
+                    | array_reference ASSIGNMENT_OPERATOR array_reference
+                    ;
+
+array_definition: INT ID RBRACKET INTNUM LBRACKET
+                | FLOAT ID RBRACKET INTNUM LBRACKET
+                | CHAR ID RBRACKET INTNUM LBRACKET
+                ;
+
+array_reference: ID RBRACKET INTNUM LBRACKET
+                ;
+
+array_literal: LBRACE value_list RBRACE
+            ;
+
+value_list: value
+          | value_list COMMA value 
+          ;
+
+value: INTNUM
+      | FLOATNUM
+      | CHARLITERAL
+      ;
+
+
 
 %%
 
