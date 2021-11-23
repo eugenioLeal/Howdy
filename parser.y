@@ -36,14 +36,14 @@ statement: declaration_statement SEMI
 
 statement_list: statement
               | statement_list statement
+              ;
 
-declaration_statement: INT ID     {printf("int\n");}
+declaration_statement: INT ID     {printf("%s %s\n",$$1, $$2);}
                     | FLOAT ID   {printf("float\n");}
                     | CHAR ID    {printf("char\n");}
                     ;
 
-
-sum_operation: ID ADDITION ID               {printf("ID + ID\n");}
+sum_operation: ID ADDITION ID               {if(addToTable() == 1){print(error)}}
               | ID ADDITION INTNUM          {printf("ID + INT\n");}
               | ID ADDITION FLOATNUM        {printf("ID + FLOAT\n");}
               | INTNUM ADDITION ID          {printf("INT + ID\n");}
@@ -189,6 +189,7 @@ compound_conditional: LPAREN conditional_expression RPAREN AND LPAREN conditiona
 
 selection_statement: SELECTION_IF LPAREN compound_conditional RPAREN LBRACE statement_list RBRACE   {printf("SIMPLE IF\n");}
                     | SELECTION_IF LPAREN compound_conditional RPAREN LBRACE statement_list RBRACE SELECTION_ELSE LBRACE statement_list RBRACE {printf("IF ELSE IF\n");}
+                    ;
 
 std_in_out_statement: stdin_func      {printf("GETS\n");}
                     | stdout_func     {printf("PUTS\n");}
@@ -228,15 +229,17 @@ parameter_list: ID
               ;
 
 struct_definition: STRUCT ID LBRACE declaration_list RBRACE
+                ;
 
 struct_member_reference: ID DOT ID
+                      ;
 
 iteration_statment: for_loop
                   | while_loop
                   | dowhile_loop
                   ;
 
-for_loop: LOOP_FOR LPAREN optional_assignment SEMI optional_conditional SEMI optional_increment RPAREN LBRACE statement_list RBRACE
+for_loop: LOOP_FOR LPAREN optional_assignment SEMI optional_conditional SEMI optional_increment RPAREN LBRACE statement_list RBRACE {print("for loop\n");}
         ;
 
 optional_assignment:  assignment_statement
@@ -259,7 +262,7 @@ dowhile_loop: LOOP_DOWHILE LBRACE statement_list RBRACE LOOP_WHILE LPAREN compou
 
 
 assignment_statement: ID ASSIGNMENT_OPERATOR ID
-                    | ID ASSIGNMENT_OPERATOR FLOATNUM
+                    | ID ASSIGNMENT_OPERATOR FLOATNUM 
                     | ID ASSIGNMENT_OPERATOR INTNUM
                     | ID ASSIGNMENT_OPERATOR function_call
                     | ID ASSIGNMENT_OPERATOR arithmetic_operation
