@@ -204,19 +204,18 @@ int symbolExists(const char *key)
         return 0;
     }
     
+    // printf("SEARCHING FOR %s\n", key);
     for (i = 0; i < table_size; i++)
     {
+        // printf("\tFound %s of type %s (comp: %d)\n", table[i].key, table[i].type, strcmp(table[i].key, key));
         if (strcmp(table[i].key, key) == 0)
         {
             // printf("Key: %s Exists on table\n", key);
             return 1;
         }
-        else
-        {
-            // printf("key is not on table");
-            return 0;
-        }
     }
+    //printf("key is not on table");
+    return 0;
   
 }
 
