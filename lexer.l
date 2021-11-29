@@ -16,6 +16,7 @@ num [0-9]+
 "int" {return(INT);}
 "float" {return(FLOAT);}
 "char" {return(CHAR);}
+"bool" {return(BOOL);}
 "nuthin" {return(NUTHIN);}
 "struct" {return(STRUCT);}
 "puh-lus" {return(ADDITION);}

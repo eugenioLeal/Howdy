@@ -46,27 +46,28 @@
      INT = 262,
      FLOAT = 263,
      CHAR = 264,
-     NUTHIN = 265,
-     STRUCT = 266,
-     ADDITION = 267,
-     SUBTRACTION = 268,
-     MULTIPLICATION = 269,
-     DIVISION = 270,
-     MOD = 271,
-     LPAREN = 272,
-     RPAREN = 273,
-     ASSIGNMENT_OPERATOR = 274,
-     LBRACKET = 275,
-     RBRACKET = 276,
-     NUMBER = 277,
-     AND = 278,
-     OR = 279,
-     EQUALS = 280,
-     NOT_EQUALS = 281,
-     LESS_THAN = 282,
-     GREATER_THAN = 283,
-     LESS_EQUAL = 284,
-     GREATER_EQUAL = 285
+     BOOL = 265,
+     NUTHIN = 266,
+     STRUCT = 267,
+     ADDITION = 268,
+     SUBTRACTION = 269,
+     MULTIPLICATION = 270,
+     DIVISION = 271,
+     MOD = 272,
+     LPAREN = 273,
+     RPAREN = 274,
+     ASSIGNMENT_OPERATOR = 275,
+     LBRACKET = 276,
+     RBRACKET = 277,
+     NUMBER = 278,
+     AND = 279,
+     OR = 280,
+     EQUALS = 281,
+     NOT_EQUALS = 282,
+     LESS_THAN = 283,
+     GREATER_THAN = 284,
+     LESS_EQUAL = 285,
+     GREATER_EQUAL = 286
    };
 #endif
 /* Tokens.  */
@@ -77,27 +78,28 @@
 #define INT 262
 #define FLOAT 263
 #define CHAR 264
-#define NUTHIN 265
-#define STRUCT 266
-#define ADDITION 267
-#define SUBTRACTION 268
-#define MULTIPLICATION 269
-#define DIVISION 270
-#define MOD 271
-#define LPAREN 272
-#define RPAREN 273
-#define ASSIGNMENT_OPERATOR 274
-#define LBRACKET 275
-#define RBRACKET 276
-#define NUMBER 277
-#define AND 278
-#define OR 279
-#define EQUALS 280
-#define NOT_EQUALS 281
-#define LESS_THAN 282
-#define GREATER_THAN 283
-#define LESS_EQUAL 284
-#define GREATER_EQUAL 285
+#define BOOL 265
+#define NUTHIN 266
+#define STRUCT 267
+#define ADDITION 268
+#define SUBTRACTION 269
+#define MULTIPLICATION 270
+#define DIVISION 271
+#define MOD 272
+#define LPAREN 273
+#define RPAREN 274
+#define ASSIGNMENT_OPERATOR 275
+#define LBRACKET 276
+#define RBRACKET 277
+#define NUMBER 278
+#define AND 279
+#define OR 280
+#define EQUALS 281
+#define NOT_EQUALS 282
+#define LESS_THAN 283
+#define GREATER_THAN 284
+#define LESS_EQUAL 285
+#define GREATER_EQUAL 286
 
 
 
