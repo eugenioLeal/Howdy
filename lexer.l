@@ -1,5 +1,6 @@
 %{
-#include <stdio.h>  
+#include <stdio.h>
+#include <string.h>
 #include "parser.tab.h"
 #include <stdlib.h>
 int line_number = 1;
@@ -11,7 +12,7 @@ float \-?[0-9]+\.[0-9]+
 id [a-zA-Z][a-zA-Z0-9_]{0,30}
 whitespace [ \t]+
 char_literal '[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\"\\-]'
-sting_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
+string_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
 
 %%
 "howdy partner" {return(HOWDY_PARTNER);}
@@ -62,16 +63,17 @@ sting_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
 
 "yeah" {return(TRUE);}
 "nah" {return(FALSE);}
+"blank" {return(NULLVAL);}
 
 "ahmReadn"			{return(GETS);}
 "ahmPrintn"			{return(PUTS);}
 "ahmPrintnLine" 	{return(PUTSLN);}
 
-{id} {return(ID);}
+{id} {yylval.sval = (char*) strdup(yytext); return(ID);}
 {float} {return(FLOATNUM);}
 {int} {return(INTNUM);}
 "\n" {line_number++;}
-{whitespace} {/* IGNORE */}
+{whitespace} {/*IGNORE*/}
 {char_literal} {return(CHARLITERAL);}
 {string_literal} {return(STRINGLITERAL);}
 

@@ -74,35 +74,48 @@ extern int yydebug;
     STRINGLITERAL = 280,
     TRUE = 281,
     FALSE = 282,
-    NOT = 283,
-    GETS = 284,
-    PUTS = 285,
-    PUTSLN = 286,
-    ASSIGNMENT_OPERATOR = 287,
-    LBRACKET = 288,
-    RBRACKET = 289,
-    LBRACE = 290,
-    RBRACE = 291,
-    NUMBER = 292,
-    AND = 293,
-    OR = 294,
-    EQUALS = 295,
-    NOT_EQUALS = 296,
-    LESS_THAN = 297,
-    GREATER_THAN = 298,
-    LESS_EQUAL = 299,
-    GREATER_EQUAL = 300,
-    SELECTION_IF = 301,
-    SELECTION_ELSE = 302,
-    LOOP_FOR = 303,
-    LOOP_DOWHILE = 304,
-    LOOP_WHILE = 305
+    NULLVAL = 283,
+    NOT = 284,
+    GETS = 285,
+    PUTS = 286,
+    PUTSLN = 287,
+    ASSIGNMENT_OPERATOR = 288,
+    LBRACKET = 289,
+    RBRACKET = 290,
+    LBRACE = 291,
+    RBRACE = 292,
+    NUMBER = 293,
+    AND = 294,
+    OR = 295,
+    EQUALS = 296,
+    NOT_EQUALS = 297,
+    LESS_THAN = 298,
+    GREATER_THAN = 299,
+    LESS_EQUAL = 300,
+    GREATER_EQUAL = 301,
+    SELECTION_IF = 302,
+    SELECTION_ELSE = 303,
+    LOOP_FOR = 304,
+    LOOP_DOWHILE = 305,
+    LOOP_WHILE = 306
   };
 #endif
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 10 "parser.y"
+
+  int ival;
+  float fval;
+  char cval;
+  char * sval;
+
+#line 116 "parser.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

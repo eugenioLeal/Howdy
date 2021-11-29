@@ -1,0 +1,17 @@
+howdy partner
+	struct foo{
+	}
+
+	func bar () float{
+		int a;
+	}
+
+	func bar () char{
+		int a;
+	}
+
+	func bar () nuthin{
+		int a;
+	}
+	foo.a holds 4;
+so long partner
