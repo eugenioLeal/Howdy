@@ -2,17 +2,14 @@
 #include <string.h>
 #include "symbolTable.h"
 
-// typedef struct symbol
-// {
-//     char key[20];
-//     char type[10];
-//     char value[30];
-// } Symbol;
-
 int table_size = 0;
 Symbol table[TABLE_MAX_SIZE];
+
 int params_len = 0;
 Symbol func_params[20];
+
+int struct_len = 0;
+Symbol struct_mems[20];
 
 int isNumeric(char *key)
 {
@@ -49,30 +46,6 @@ char *getType(char *key)
     {
         if (strcmp(key, table[i].key) == 0)
         {
-            // if (strcmp(table[i].type, "int") == 0)
-            // {
-            //     printf("key %s is INT TYPE\n", key);
-            // }
-            // else if (strcmp(table[i].type, "float") == 0)
-            // {
-            //     printf("key %s is FLOAT TYPE\n", key);
-            // }
-            // else if (strcmp(table[i].type, "char") == 0)
-            // {
-            //     printf("key %s is CHAR TYPE\n", key);
-            // }
-            // else if (strcmp(table[i].type, "nuthin") == 0)
-            // {
-            //     printf("key %s is NUTHIN TYPE\n", key);
-            // }
-            // else
-            // {
-            //     printf("ERROR symbol %s is undefined\n", key);
-            // }
-            // if (strcmp(table[i].type, "function") == 0)
-            // {
-            //     printf("key %s is FUNCTION TYPE\n", key);
-            // }
             return table[i].type;
         }
     }
@@ -85,20 +58,6 @@ int areMatchingTypes(char *id_1, char *id_2)
         return 1;
     }
     return 0;
-    /*
-    int i;
-    char type_1[TYPE_NAME_MAX_SIZE];
-    char type_2[TYPE_NAME_MAX_SIZE];
-    for (i = 0; i < table_size; i++)
-    {
-        if (strcmp(id_1, id_2) == 0)
-        {
-            if (strcmp(table[i].type, "int") == 0)
-            {
-            }
-        }
-    }
-    */
 }
 
 int isFunction(char *key)
@@ -107,21 +66,6 @@ int isFunction(char *key)
         return 1;
     }
     return 0;
-    // int i;
-    // for (i = 0; i < table_size; i++)
-    // {
-    //     if (strcmp(key, table[i].key) == 0)
-    //     {
-    //         if (strcmp(table[i].type, "function") == 0)
-    //         {
-    //             printf("key %s is FUNCTION\n", key);
-    //             return 1;
-    //         }else{
-    //             printf("ERROR: not a function\n ");
-    //             return 0;
-    //         }
-    //     }
-    // }
 }
 
 
@@ -131,21 +75,6 @@ int isArray(char *key)
         return 1;
     }
     return 0;
-    // int i;
-    // for (i = 0; i < table_size; i++)
-    // {
-    //     if (strcmp(key, table[i].key) == 0)
-    //     {
-    //         if (strcmp(table[i].type, "array") == 0)
-    //         {
-    //             printf("key %s is ARRAY\n", key);
-    //             return 1;
-    //         }else{
-    //             printf("ERROR: not an ARRAY\n ");
-    //             return 0;
-    //         }
-    //     }
-    // }
 }
 
 char *addType(char *new_type)
@@ -232,7 +161,7 @@ void printSymbolTable()
 
 int addFuncParam(char * key, char * type)
 {
-    int i = 0;
+    int i;
     for (i = 0; i < params_len; i++)
     {
         if (strcmp(func_params[i].key, key) == 0)
@@ -248,7 +177,7 @@ int addFuncParam(char * key, char * type)
     return 0;
 }
 
-void transferFuncParams(char * func_name)
+void transferFuncParams(char * func_name, char * functype)
 {
     int i;
     char full_name[60];
@@ -257,7 +186,47 @@ void transferFuncParams(char * func_name)
         sprintf(full_name, "%s.%s", func_name, func_params[i].key);
         addToSymbolTable(full_name, func_params[i].type);
     }
+    addToSymbolTable(func_name, functype);
     params_len = 0;
+}
+
+void resetParams()
+{
+    params_len = 0;
+}
+
+int addMemberToStruct(char * key, char * type)
+{
+    int i=0;
+    for(i=0; i<struct_len; i++){
+        if(strcmp(struct_mems[i].key, key)==0){
+            return 1; //ya existe
+        }
+    }
+    memset(struct_mems[i].key, 0, 30);
+    memset(struct_mems[i].type, 0, 10);
+    strcpy(struct_mems[i].key, key);
+    strcpy(struct_mems[i].type, type);
+    struct_len++;
+    return 0;
+}
+
+void transferStructMems(char * struct_name)
+{
+    int i;
+    char full_name[60];
+    for(i=0; i<struct_len; i++){
+        memset(full_name, 0, 60);
+        sprintf(full_name, "%s.%s", struct_name, struct_mems[i].key);
+        addToSymbolTable(full_name, struct_mems[i].type);
+    }
+    addToSymbolTable(struct_mems, "struct");
+    struct_len = 0;
+}
+
+void resetStruct()
+{
+    struct_len = 0;
 }
 
 // int main()

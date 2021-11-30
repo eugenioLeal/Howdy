@@ -237,14 +237,15 @@ stdout_ln_func: PUTSLN ID           {}
               | PUTSLN FLOATNUM     {}
               ;
 
-function_declaration: FUNC ID LPAREN declaration_list RPAREN INT LBRACE statement_list RBRACE     {transferFuncParams($2);}
-                    | FUNC ID LPAREN declaration_list RPAREN FLOAT LBRACE statement_list RBRACE   {transferFuncParams($2);}
-                    | FUNC ID LPAREN declaration_list RPAREN CHAR LBRACE statement_list RBRACE    {transferFuncParams($2);}
-                    | FUNC ID LPAREN declaration_list RPAREN NUTHIN LBRACE statement_list RBRACE  {transferFuncParams($2);}
+function_declaration: FUNC ID LPAREN func_declaration_list RPAREN INT LBRACE statement_list RBRACE      {if(symbolExists($2)==0){transferFuncParams($2, "intfunc");}else{resetParams();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
+                    | FUNC ID LPAREN func_declaration_list RPAREN FLOAT LBRACE statement_list RBRACE    {if(symbolExists($2)==0){transferFuncParams($2, "floatfunc");}else{resetParams();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
+                    | FUNC ID LPAREN func_declaration_list RPAREN CHAR LBRACE statement_list RBRACE     {if(symbolExists($2)==0){transferFuncParams($2, "charfunc");}else{resetParams();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
+                    | FUNC ID LPAREN func_declaration_list RPAREN NUTHIN LBRACE statement_list RBRACE   {if(symbolExists($2)==0){transferFuncParams($2, "voidfunc");}else{resetParams();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
+                    | FUNC ID LPAREN func_declaration_list RPAREN BOOL LBRACE statement_list RBRACE     {if(symbolExists($2)==0){transferFuncParams($2, "boolfunc");}else{resetParams();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
                     ;
 
-declaration_list: func_param_declaration 
-                | func_param_declaration COMMA declaration_list 
+func_declaration_list: func_param_declaration 
+                | func_param_declaration COMMA func_declaration_list 
                 | 
                 ;
 
@@ -262,8 +263,19 @@ parameter_list: ID
               |
               ;
 
-struct_definition: STRUCT ID LBRACE declaration_list RBRACE {printf("STRUCT DEF (line %d) %s\n", line_number, $2);}
+struct_definition: STRUCT ID LBRACE struct_declaration_list RBRACE {if(symbolExists($2)==0){transferStructMems($2);}else{resetStruct();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
                 ;
+
+struct_declaration_list: struct_declaration SEMI
+                      | struct_declaration SEMI struct_declaration_list
+                      |
+                      ;
+
+struct_declaration: INT ID SEMI     {if(addMemberToStruct($2, "int")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  | CHAR ID SEMI    {if(addMemberToStruct($2, "char")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  | FLOAT ID SEMI   {if(addMemberToStruct($2, "float")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  | BOOL ID SEMI    {if(addMemberToStruct($2, "bool")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  ;
 
 struct_member_reference: ID DOT ID {printf("struct ref %s . %s\n", $1, $3);}
                       ;
@@ -324,6 +336,7 @@ assignment_statement: ID ASSIGNMENT_OPERATOR ID     {if(symbolExists($1) && symb
 array_definition: INT ID RBRACKET INTNUM LBRACKET
                 | FLOAT ID RBRACKET INTNUM LBRACKET
                 | CHAR ID RBRACKET INTNUM LBRACKET
+                | BOOL ID RBRACKET INTNUM LBRACKET
                 ;
 
 array_reference: ID RBRACKET INTNUM LBRACKET

@@ -22,6 +22,10 @@ int updateSymbol(char *key, char *old_type, char *new_value, char *new_type);
 int symbolExists(const char *key);
 void printSymbolTable();
 int addFuncParam(char * key, char * type);
-void transferFuncParams(char * func_name);
+void transferFuncParams(char * func_name, char * functype)
+void resetParams();
+int addMemberToStruct(char * key, char * type);
+void transferStructMems(char * struct_name);
+void resetStruct();
 
 #endif
