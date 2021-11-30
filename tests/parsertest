@@ -1,6 +1,13 @@
 howdy partner
 	int a;
-	func foo() int {
-		a puh-lus 1;
+	int b;
+	int d;
+	float c;
+	reckon((a iz 2) or (d iz 3)){
+		a puh-lus 5;
 	}
+	ahmPrintn a;
+	ahmPrintnLine a;
+	ahmPrintn 5;
+	ahmPrintn c;
 so long partner

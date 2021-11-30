@@ -1,17 +1,8 @@
 howdy partner
-	struct foo{
+	int a;
+	char b;
+	float
+	func bar (int a, int b, char c) float{
+		a puh-lus 3;
 	}
-
-	func bar () float{
-		int a;
-	}
-
-	func bar () char{
-		int a;
-	}
-
-	func bar () nuthin{
-		int a;
-	}
-	foo.a holds 4;
 so long partner

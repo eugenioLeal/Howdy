@@ -11,6 +11,8 @@
 
 int table_size = 0;
 Symbol table[TABLE_MAX_SIZE];
+int params_len = 0;
+Symbol func_params[20];
 
 int isNumeric(char *key)
 {
@@ -226,6 +228,36 @@ void printSymbolTable()
     {
         printf("%s %s %s\n", table[i].key, table[i].type, table[i].value);
     }
+}
+
+int addFuncParam(char * key, char * type)
+{
+    int i = 0;
+    for (i = 0; i < params_len; i++)
+    {
+        if (strcmp(func_params[i].key, key) == 0)
+        {
+            return 1; //ya existe
+        }
+    }
+    memset(func_params[i].key, 0, 30);
+    memset(func_params[i].type, 0, 10);
+    strcpy(func_params[i].key, key);
+    strcpy(func_params[i].type, type);
+    params_len++;
+    return 0;
+}
+
+void transferFuncParams(char * func_name)
+{
+    int i;
+    char full_name[60];
+    for(i=0; i<params_len; i++){
+        memset(full_name, 0, 60);
+        sprintf(full_name, "%s.%s", func_name, func_params[i].key);
+        addToSymbolTable(full_name, func_params[i].type);
+    }
+    params_len = 0;
 }
 
 // int main()

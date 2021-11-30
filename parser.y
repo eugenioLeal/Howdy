@@ -1,5 +1,6 @@
 %{
 #include<stdio.h>
+#include<string.h>
 extern int yylex(void);
 extern int line_number;
 void yyerror(char *s);
@@ -22,10 +23,10 @@ void yyerror(char *s);
 %start program
 %token HOWDY_PARTNER SO_LONG_PARTNER
 %token SEMI COMMA DOT
-%token ID INT FLOAT CHAR NUTHIN STRUCT FUNC
+%token ID INT FLOAT CHAR NUTHIN STRUCT FUNC RETURN BOOL
 %token ADDITION SUBTRACTION MULTIPLICATION DIVISION MOD LPAREN RPAREN
 %token INTNUM FLOATNUM CHARLITERAL STRINGLITERAL
-%token TRUE FALSE NULLVAL
+%token BOOLVAL NULLVAL
 %token NOT 
 %token GETS PUTS PUTSLN
 %token ASSIGNMENT_OPERATOR LBRACKET RBRACKET LBRACE RBRACE NUMBER AND OR EQUALS NOT_EQUALS LESS_THAN GREATER_THAN LESS_EQUAL GREATER_EQUAL
@@ -55,9 +56,10 @@ statement_list: statement
 declaration_statement: INT ID    {if(addToSymbolTable($2, "int")==1){printf("ERROR (line %d): Symbol '%s' is already defined.\n", line_number, $2);}}
                     | FLOAT ID   {if(addToSymbolTable($2, "float")==1){printf("ERROR (line %d): Symbol '%s' is already defined.\n", line_number, $2);}}
                     | CHAR ID    {if(addToSymbolTable($2, "char")==1){printf("ERROR (line %d): Symbol '%s' is already defined.\n", line_number, $2);}}
+                    | BOOL ID    {if(addToSymbolTable($2, "bool")==1){printf("ERROR (line %d): Symbol '%s' is already defined.\n", line_number, $2);}}
                     ;
 
-sum_operation: ID ADDITION ID               {if(symbolExists($1) && symbolExists($3) && isNumeric($1) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): the symbol '%s' and '%s' must both be defined and of type 'int' or 'float'.\n", line_number, $1, $3);}}
+sum_operation: ID ADDITION ID               {if(symbolExists($1) && symbolExists($3) && isNumeric($1) && isNumeric($3)){}else{printf("1 is numeric %d, 1 defined %d, 3 is numeric %d, 3 is defined %d, 3 is '%s'\n", isNumeric($1), symbolExists($1), isNumeric($3), symbolExists($3), $3); printf("TYPE ERROR (line %d): the symbol '%s' and '%s' must both be defined and of type 'int' or 'float'.\n", line_number, $1, $3);}}
               | ID ADDITION INTNUM          {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): symbol '%s' must be of type 'int' or 'float'\n", line_number, $1);}}
               | ID ADDITION FLOATNUM        {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): symbol '%s' must be of type 'int' or 'float'\n", line_number, $1);}}
               | INTNUM ADDITION ID          {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): symbol '%s' must be of type 'int' or 'float'\n", line_number, $3);}}
@@ -119,29 +121,35 @@ arithmetic_operation: sum_operation
                     | mod_operation
                     ;
 
-equality_expression: ID EQUALS ID               {if(symbolExists($1) && symbolExists($3) && !areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
+equality_expression: ID EQUALS ID               {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
                     | ID EQUALS INTNUM          {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $1);}}
                     | ID EQUALS FLOATNUM        {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $1);}}
+                    | ID EQUALS BOOLVAL         {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol %s must be boolean to be compared with type 'bool'.\n", line_number, $1);}}
                     | INTNUM EQUALS ID          {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $3);}}
                     | INTNUM EQUALS INTNUM
                     | INTNUM EQUALS FLOATNUM
                     | FLOATNUM EQUALS ID        {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $3);}}
                     | FLOATNUM EQUALS INTNUM
                     | FLOATNUM EQUALS FLOATNUM 
+                    | BOOLVAL EQUALS BOOLVAL
+                    | BOOLVAL EQUALS ID         {if(symbolExists($3) && strcmp(getType($3), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol %s must be boolean to be compared with type 'bool'.\n", line_number, $3);}}
                     ;
 
-inequality_expression: ID NOT_EQUALS ID             {if(symbolExists($1) && symbolExists($3) && !areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
+inequality_expression: ID NOT_EQUALS ID             {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
                     | ID NOT_EQUALS INTNUM          {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $1);}}
                     | ID NOT_EQUALS FLOATNUM        {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $1);}}
+                    | ID NOT_EQUALS BOOLVAL         {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol %s must be boolean to be compared with type 'bool'.\n", line_number, $1);}}
                     | INTNUM NOT_EQUALS ID          {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $3);}}
                     | INTNUM NOT_EQUALS INTNUM
                     | INTNUM NOT_EQUALS FLOATNUM
                     | FLOATNUM NOT_EQUALS ID        {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $3);}}
                     | FLOATNUM NOT_EQUALS INTNUM
                     | FLOATNUM NOT_EQUALS FLOATNUM
+                    | BOOLVAL NOT_EQUALS BOOLVAL
+                    | BOOLVAL NOT_EQUALS ID         {if(symbolExists($3) && strcmp(getType($3), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol %s must be boolean to be compared with type 'bool'.\n", line_number, $3);}}
                     ;
 
-lessthan_expression: ID LESS_THAN ID                {if(symbolExists($1) && symbolExists($3) && !areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
+lessthan_expression: ID LESS_THAN ID                {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
                     | ID LESS_THAN INTNUM           {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $1);}}   
                     | ID LESS_THAN FLOATNUM         {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $1);}}
                     | INTNUM LESS_THAN ID           {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $3);}}
@@ -152,7 +160,7 @@ lessthan_expression: ID LESS_THAN ID                {if(symbolExists($1) && symb
                     | FLOATNUM LESS_THAN FLOATNUM   {}
                     ;
 
-greaterthan_expression: ID GREATER_THAN ID          {if(symbolExists($1) && symbolExists($3) && !areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
+greaterthan_expression: ID GREATER_THAN ID          {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
                     | ID GREATER_THAN INTNUM        {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $1);}}
                     | ID GREATER_THAN FLOATNUM      {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $1);}}
                     | INTNUM GREATER_THAN ID        {{if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $3);}}}
@@ -163,7 +171,7 @@ greaterthan_expression: ID GREATER_THAN ID          {if(symbolExists($1) && symb
                     | FLOATNUM GREATER_THAN FLOATNUM
                     ;
 
-lessequal_expression: ID LESS_EQUAL ID              {if(symbolExists($1) && symbolExists($3) && !areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
+lessequal_expression: ID LESS_EQUAL ID              {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
                     | ID LESS_EQUAL INTNUM          {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $1);}}
                     | ID LESS_EQUAL FLOATNUM        {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $1);}}
                     | INTNUM LESS_EQUAL ID          {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $3);}}
@@ -174,7 +182,7 @@ lessequal_expression: ID LESS_EQUAL ID              {if(symbolExists($1) && symb
                     | FLOATNUM LESS_EQUAL FLOATNUM  
                     ;
 
-greaterequal_expression: ID GREATER_EQUAL ID            {if(symbolExists($1) && symbolExists($3) && !areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
+greaterequal_expression: ID GREATER_EQUAL ID            {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1, $3)){}else{printf("TYPE ERROR (line %d): symbols '%s' and '%s' must be compatible types to be compared.\n", line_number, $1, $3);}}
                     | ID GREATER_EQUAL INTNUM           {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $1);}}
                     | ID GREATER_EQUAL FLOATNUM         {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'float'.\n", line_number, $1);}}
                     | INTNUM GREATER_EQUAL ID           {if(symbolExists($3) && isNumeric($3)){}else{printf("TYPE ERROR (line %d): Symbol %s must be numeric to be compared with type 'int'.\n", line_number, $3);}}
@@ -191,9 +199,12 @@ conditional_expression: equality_expression     {}
                       | greaterthan_expression  {}
                       | lessequal_expression    {}
                       | greaterequal_expression {}
+                      | ID        {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'bool' to be used as a conditional expression.\n", line_number, $1);}}
+                      | BOOLVAL
                       ;
 
 compound_conditional: conditional_expression 
+                    | NOT conditional_expression
                     | LPAREN conditional_expression RPAREN AND LPAREN conditional_expression RPAREN
                     | LPAREN conditional_expression RPAREN OR LPAREN conditional_expression RPAREN
                     | compound_conditional AND LPAREN conditional_expression RPAREN
@@ -214,28 +225,34 @@ std_in_out_statement: stdin_func
 stdin_func: GETS ID {printf("STDIN");}
           ;
 
-stdout_func: PUTS ID          {}
-            | PUTS CHAR       {}
-            | PUTS INTNUM     {}
-            | PUTS FLOATNUM   {}
+stdout_func: PUTS ID            {}
+            | PUTS CHARLITERAL  {}
+            | PUTS INTNUM       {}
+            | PUTS FLOATNUM     {}
             ;
 
-stdout_ln_func: PUTSLN ID         {}
-              | PUTSLN CHAR       {}
-              | PUTSLN INTNUM     {}
-              | PUTSLN FLOATNUM   {}
+stdout_ln_func: PUTSLN ID           {}
+              | PUTSLN CHARLITERAL  {}
+              | PUTSLN INTNUM       {}
+              | PUTSLN FLOATNUM     {}
               ;
 
-function_declaration: FUNC ID LPAREN declaration_list RPAREN INT LBRACE statement_list RBRACE     {printf("Function %s of type int and arguments %s\n", $2, "___");}
-                    | FUNC ID LPAREN declaration_list RPAREN FLOAT LBRACE statement_list RBRACE   {printf("Function %s of type float and arguments %s\n", $2, "___");}
-                    | FUNC ID LPAREN declaration_list RPAREN CHAR LBRACE statement_list RBRACE    {printf("Function %s of type char and arguments %s\n", $2, "___");}
-                    | FUNC ID LPAREN declaration_list RPAREN NUTHIN LBRACE statement_list RBRACE  {printf("Function %s of type void and arguments %s\n", $2, "___");}
+function_declaration: FUNC ID LPAREN declaration_list RPAREN INT LBRACE statement_list RBRACE     {transferFuncParams($2);}
+                    | FUNC ID LPAREN declaration_list RPAREN FLOAT LBRACE statement_list RBRACE   {transferFuncParams($2);}
+                    | FUNC ID LPAREN declaration_list RPAREN CHAR LBRACE statement_list RBRACE    {transferFuncParams($2);}
+                    | FUNC ID LPAREN declaration_list RPAREN NUTHIN LBRACE statement_list RBRACE  {transferFuncParams($2);}
                     ;
 
-declaration_list: declaration_statement
-                | declaration_statement COMMA declaration_list
-                |
+declaration_list: func_param_declaration 
+                | func_param_declaration COMMA declaration_list 
+                | 
                 ;
+
+func_param_declaration: INT ID    {if(addFuncParam($2, "int") == 0){}else{printf("ERROR (line %d): Function parameter '%s' already defined.\n",line_number, $2);}}
+                      | CHAR ID   {if(addFuncParam($2, "char") == 0){}else{printf("ERROR (line %d): Function parameter '%s' already defined.\n",line_number, $2);}}
+                      | FLOAT ID  {if(addFuncParam($2, "float") == 0){}else{printf("ERROR (line %d): Function parameter '%s' already defined.\n",line_number, $2);}}
+                      | BOOL ID   {if(addFuncParam($2, "bool") == 0){}else{printf("ERROR (line %d): Function parameter '%s' already defined.\n",line_number, $2);}}
+                      ;
 
 function_call: ID LPAREN parameter_list RPAREN {}
               ;
@@ -245,10 +262,10 @@ parameter_list: ID
               |
               ;
 
-struct_definition: STRUCT ID LBRACE declaration_list RBRACE {printf("STRUCT DEF %s\n", line_number, $2);}
+struct_definition: STRUCT ID LBRACE declaration_list RBRACE {printf("STRUCT DEF (line %d) %s\n", line_number, $2);}
                 ;
 
-struct_member_reference: ID DOT ID {printf("struct ref %s - %s - %s\n", $1, "___", $3);}
+struct_member_reference: ID DOT ID {printf("struct ref %s . %s\n", $1, $3);}
                       ;
 
 iteration_statment: for_loop
@@ -278,13 +295,14 @@ dowhile_loop: LOOP_DOWHILE LBRACE statement_list RBRACE LOOP_WHILE LPAREN compou
             ;
 
 
-assignment_statement: ID ASSIGNMENT_OPERATOR ID     {printf("%s holds %s\n", $1, $3);}
-                    | ID ASSIGNMENT_OPERATOR FLOATNUM      {}
-                    | ID ASSIGNMENT_OPERATOR INTNUM     {}
+assignment_statement: ID ASSIGNMENT_OPERATOR ID     {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1,$3)){}else{printf("TYPE ERROR (line %d): Symbols '%s' and '%s' must both be declared and of matching types.\n", line_number, $1, $3);}}
+                    | ID ASSIGNMENT_OPERATOR FLOATNUM      {if(symbolExists($1) && strcmp(getType($1), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'float' to assign an float value.\n", line_number, $1);}}
+                    | ID ASSIGNMENT_OPERATOR INTNUM     {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'int' to assign an integer value.\n", line_number, $1);}}
                     | ID ASSIGNMENT_OPERATOR function_call     {}
                     | ID ASSIGNMENT_OPERATOR arithmetic_operation     {}
                     | ID ASSIGNMENT_OPERATOR struct_member_reference     {}
                     | ID ASSIGNMENT_OPERATOR array_reference     {}
+                    | ID ASSIGNMENT_OPERATOR BOOLVAL     {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type boolean to assign a boolean value.\n", line_number, $1);}}
                     | struct_member_reference ASSIGNMENT_OPERATOR ID     {}
                     | struct_member_reference ASSIGNMENT_OPERATOR FLOATNUM     {}
                     | struct_member_reference ASSIGNMENT_OPERATOR INTNUM     {}
@@ -292,6 +310,7 @@ assignment_statement: ID ASSIGNMENT_OPERATOR ID     {printf("%s holds %s\n", $1,
                     | struct_member_reference ASSIGNMENT_OPERATOR arithmetic_operation     {}
                     | struct_member_reference ASSIGNMENT_OPERATOR struct_member_reference     {}
                     | struct_member_reference ASSIGNMENT_OPERATOR array_reference     {}
+                    | struct_member_reference ASSIGNMENT_OPERATOR BOOLVAL     {}
                     | array_reference ASSIGNMENT_OPERATOR ID     {}
                     | array_reference ASSIGNMENT_OPERATOR FLOATNUM     {}
                     | array_reference ASSIGNMENT_OPERATOR INTNUM     {}
@@ -299,6 +318,7 @@ assignment_statement: ID ASSIGNMENT_OPERATOR ID     {printf("%s holds %s\n", $1,
                     | array_reference ASSIGNMENT_OPERATOR arithmetic_operation     {}
                     | array_reference ASSIGNMENT_OPERATOR struct_member_reference     {}
                     | array_reference ASSIGNMENT_OPERATOR array_reference     {}
+                    | array_reference ASSIGNMENT_OPERATOR BOOLVAL     {}
                     ;
 
 array_definition: INT ID RBRACKET INTNUM LBRACKET

@@ -61,43 +61,44 @@ extern int yydebug;
     NUTHIN = 267,
     STRUCT = 268,
     FUNC = 269,
-    ADDITION = 270,
-    SUBTRACTION = 271,
-    MULTIPLICATION = 272,
-    DIVISION = 273,
-    MOD = 274,
-    LPAREN = 275,
-    RPAREN = 276,
-    INTNUM = 277,
-    FLOATNUM = 278,
-    CHARLITERAL = 279,
-    STRINGLITERAL = 280,
-    TRUE = 281,
-    FALSE = 282,
-    NULLVAL = 283,
-    NOT = 284,
-    GETS = 285,
-    PUTS = 286,
-    PUTSLN = 287,
-    ASSIGNMENT_OPERATOR = 288,
-    LBRACKET = 289,
-    RBRACKET = 290,
-    LBRACE = 291,
-    RBRACE = 292,
-    NUMBER = 293,
-    AND = 294,
-    OR = 295,
-    EQUALS = 296,
-    NOT_EQUALS = 297,
-    LESS_THAN = 298,
-    GREATER_THAN = 299,
-    LESS_EQUAL = 300,
-    GREATER_EQUAL = 301,
-    SELECTION_IF = 302,
-    SELECTION_ELSE = 303,
-    LOOP_FOR = 304,
-    LOOP_DOWHILE = 305,
-    LOOP_WHILE = 306
+    RETURN = 270,
+    BOOL = 271,
+    ADDITION = 272,
+    SUBTRACTION = 273,
+    MULTIPLICATION = 274,
+    DIVISION = 275,
+    MOD = 276,
+    LPAREN = 277,
+    RPAREN = 278,
+    INTNUM = 279,
+    FLOATNUM = 280,
+    CHARLITERAL = 281,
+    STRINGLITERAL = 282,
+    BOOLVAL = 283,
+    NULLVAL = 284,
+    NOT = 285,
+    GETS = 286,
+    PUTS = 287,
+    PUTSLN = 288,
+    ASSIGNMENT_OPERATOR = 289,
+    LBRACKET = 290,
+    RBRACKET = 291,
+    LBRACE = 292,
+    RBRACE = 293,
+    NUMBER = 294,
+    AND = 295,
+    OR = 296,
+    EQUALS = 297,
+    NOT_EQUALS = 298,
+    LESS_THAN = 299,
+    GREATER_THAN = 300,
+    LESS_EQUAL = 301,
+    GREATER_EQUAL = 302,
+    SELECTION_IF = 303,
+    SELECTION_ELSE = 304,
+    LOOP_FOR = 305,
+    LOOP_DOWHILE = 306,
+    LOOP_WHILE = 307
   };
 #endif
 
@@ -105,14 +106,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 10 "parser.y"
+#line 11 "parser.y"
 
   int ival;
   float fval;
   char cval;
   char * sval;
 
-#line 116 "parser.tab.h"
+#line 117 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
