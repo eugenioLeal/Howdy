@@ -60,7 +60,7 @@ string_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
 "nuthin" {return(NUTHIN);}
 "struct" {return(STRUCT);}
 "func" {return(FUNC);}
-"shootback" {return(RETURN);}
+"yeehaw" {return(RETURN);}
 "liferdeath" {return(BOOL);}
 
 "yeah" {return(BOOLVAL);}
