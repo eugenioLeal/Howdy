@@ -82,7 +82,7 @@ char *addType(char *new_type){
         }
         else
         {
-            if (new_type == "int" || new_type == "float" || new_type == "char" || new_type == "nuthin")
+            if (strcmp(new_type,"int") == 0 || strcmp(new_type,"float") == 0 || strcmp(new_type,"char") == 0 || strcmp(new_type,"nuthin") == 0)
             {
                 strcpy(table[i].type, new_type);
                 printf("Type %s updated\n", new_type);

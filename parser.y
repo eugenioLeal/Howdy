@@ -318,7 +318,7 @@ assignment_statement: ID ASSIGNMENT_OPERATOR ID                       {if(symbol
                     | ID ASSIGNMENT_OPERATOR FLOATNUM                 {if(symbolExists($1) && strcmp(getType($1), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'float' to assign an float value.\n", line_number, $1);}}
                     | ID ASSIGNMENT_OPERATOR INTNUM                   {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'int' to assign an integer value.\n", line_number, $1);}}
                     | ID ASSIGNMENT_OPERATOR function_call            {}
-                    | ID ASSIGNMENT_OPERATOR arithmetic_operation     {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line $d): Cannot assign numeric value to non-numeric symbol '%s'.\n", line_number, $1);}}
+                    | ID ASSIGNMENT_OPERATOR arithmetic_operation     {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line %d): Cannot assign numeric value to non-numeric symbol '%s'.\n", line_number, $1);}}
                     | ID ASSIGNMENT_OPERATOR ID DOT ID                {if(symbolExists($1) && structMemExists($3,$5) && structMatchesID($3,$5,$1)){}else{printf("TYPE ERROR (line %d): Both symbols '%s' and '%s' member of struct '%s' must be of equivalent types to assign values between them.\n", line_number, $1, $5, $3);}}
                     | ID ASSIGNMENT_OPERATOR ID LBRACKET array_index RBRACKET          {if(symbolExists($1) && symbolExists($3) && arrMatchesID($3, $1)){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be the same type as '%s'.\n", line_number, $1, $3);}}
                     | ID ASSIGNMENT_OPERATOR BOOLVAL                  {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type boolean to assign a boolean value.\n", line_number, $1);}}
@@ -350,7 +350,7 @@ array_definition: INT ID LBRACKET INTNUM RBRACKET     {if(addToSymbolTable($2, "
                 ;
 
 array_index: INTNUM
-            | ID    {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' used as array reference must be a defined integer type.");}}
+            | ID    {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' used as array reference must be a defined integer type.",line_number, $1);}}
 
 %%
 
