@@ -1,8 +1,46 @@
 howdy partner
+	struct foo {
+		int w;
+		char x;
+		float y;
+		liferdeath z;
+	}
+
 	int a;
 	char b;
-	float
-	func bar (int a, int b, char c) float{
-		a puh-lus 3;
+	float c;
+	liferdeath x;
+	a holds foo.w;
+	b holds foo.x;
+	c holds foo.y;
+	x holds foo.z;
+
+	int numarr[5];
+
+	reckon(a iz 5){
+		a holds 32;
+	}opposin{
+		c holds 2.3;
 	}
+
+	fer(a holds 0; a kneeHigh 5; a holds a puh-lus 1){
+		numarr[a] holds a;
+	}
+	
+	foo.w holds 1;
+	foo.x holds 'c';
+	foo.y holds 22.3;
+	foo.z holds nah;
+
+	char arr[5];
+	char arr[5];
+	float my_floats[5];
+	liferdeath my_bools[5];
+	arr[0] holds b; 
+
+	func dostuff(int a, int b) int{
+		ahmPrintn a;
+	}
+
+	dostuff(4, 5);
 so long partner

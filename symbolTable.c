@@ -11,8 +11,7 @@ Symbol func_params[20];
 int struct_len = 0;
 Symbol struct_mems[20];
 
-int isNumeric(char *key)
-{
+int isNumeric(char *key){
     char type[TYPE_NAME_MAX_SIZE];
     strcpy(type, getType(key));
     if(strcmp(type, "int") == 0 || strcmp(type, "float") == 0){
@@ -21,8 +20,7 @@ int isNumeric(char *key)
     return 0;
 }
 
-int addToSymbolTable(char *new_key, char *new_type)
-{
+int addToSymbolTable(char *new_key, char *new_type){
     int i = 0;
     for (i = 0; i < table_size; i++)
     {
@@ -34,13 +32,12 @@ int addToSymbolTable(char *new_key, char *new_type)
     }
     strcpy(table[i].key, new_key);
     strcpy(table[i].type, new_type);
-    // printf("Symbol added:\nKey: %s\nType: %s\n\n", new_key, new_type);
+    printf("Symbol added:\nKey: %s\nType: %s\n\n", new_key, new_type);
     table_size++;
     return 0;
 }
 
-char *getType(char *key)
-{
+char *getType(char *key){
     int i;
     for (i = 0; i < table_size; i++)
     {
@@ -52,16 +49,14 @@ char *getType(char *key)
     return "";
 }
 
-int areMatchingTypes(char *id_1, char *id_2)
-{   
+int areMatchingTypes(char *id_1, char *id_2){   
     if(strcmp(getType(id_1), getType(id_2)) == 0){
         return 1;
     }
     return 0;
 }
 
-int isFunction(char *key)
-{
+int isFunction(char *key){
     if(strcmp(getType(key), "function") == 0){
         return 1;
     }
@@ -69,16 +64,14 @@ int isFunction(char *key)
 }
 
 
-int isArray(char *key)
-{
+int isArray(char *key){
     if(strcmp(getType(key), "array") == 0){
         return 1;
     }
     return 0;
 }
 
-char *addType(char *new_type)
-{
+char *addType(char *new_type){
     int i;
     for (i = 0; i < table_size; i++)
     {
@@ -103,8 +96,7 @@ char *addType(char *new_type)
     return "";
 }
 
-int updateSymbol(char *key, char *old_type, char *new_value, char *new_type)
-{
+int updateSymbol(char *key, char *old_type, char *new_value, char *new_type){
     int i;
     for (i = 0; i < table_size; i++)
     {
@@ -126,8 +118,7 @@ int updateSymbol(char *key, char *old_type, char *new_value, char *new_type)
     return 1;
 }
 
-int symbolExists(const char *key)
-{
+int symbolExists(const char *key){
     int i = 0;
     if (table_size == 0)
     {
@@ -150,17 +141,19 @@ int symbolExists(const char *key)
   
 }
 
-void printSymbolTable()
-{
+void printSymbolTable(){
     int i;
+    printf("============\n");
+    printf("SYMBOL TABLE\n");
+    printf("length: %d\n", table_size);
+    printf("============\n");
     for (i = 0; i < table_size; i++)
     {
         printf("%s %s %s\n", table[i].key, table[i].type, table[i].value);
     }
 }
 
-int addFuncParam(char * key, char * type)
-{
+int addFuncParam(char * key, char * type){
     int i;
     for (i = 0; i < params_len; i++)
     {
@@ -177,8 +170,7 @@ int addFuncParam(char * key, char * type)
     return 0;
 }
 
-void transferFuncParams(char * func_name, char * functype)
-{
+void transferFuncParams(char * func_name, char * func_type){
     int i;
     char full_name[60];
     for(i=0; i<params_len; i++){
@@ -186,17 +178,15 @@ void transferFuncParams(char * func_name, char * functype)
         sprintf(full_name, "%s.%s", func_name, func_params[i].key);
         addToSymbolTable(full_name, func_params[i].type);
     }
-    addToSymbolTable(func_name, functype);
+    addToSymbolTable(func_name, func_type);
     params_len = 0;
 }
 
-void resetParams()
-{
+void resetParams(){
     params_len = 0;
 }
 
-int addMemberToStruct(char * key, char * type)
-{
+int addMemberToStruct(char * key, char * type){
     int i=0;
     for(i=0; i<struct_len; i++){
         if(strcmp(struct_mems[i].key, key)==0){
@@ -211,8 +201,7 @@ int addMemberToStruct(char * key, char * type)
     return 0;
 }
 
-void transferStructMems(char * struct_name)
-{
+void transferStructMems(char * struct_name){
     int i;
     char full_name[60];
     for(i=0; i<struct_len; i++){
@@ -220,26 +209,92 @@ void transferStructMems(char * struct_name)
         sprintf(full_name, "%s.%s", struct_name, struct_mems[i].key);
         addToSymbolTable(full_name, struct_mems[i].type);
     }
-    addToSymbolTable(struct_mems, "struct");
+    addToSymbolTable(struct_name, "struct");
     struct_len = 0;
 }
 
-void resetStruct()
-{
+void resetStruct(){
     struct_len = 0;
 }
 
-// int main()
-// {
-//     Symbol sym_table[10];
-//     addToSymbolTable(sym_table, "a", "function", "5");
+int structMemExists(char * struct_name, char * mem_name){
+    char full_name[60];
+    sprintf(full_name, "%s.%s", struct_name, mem_name);
+    return symbolExists(full_name);
+}
 
-//     getType(sym_table, "a");
-//     isFunction(sym_table,"a");
+int structMemNumeric(char * struct_name, char * mem_name){
+    char full_name[60];
+    sprintf(full_name, "%s.%s", struct_name, mem_name);
+    return isNumeric(full_name);
+}
 
-//     printSymbolTable(sym_table);
+int structMatchesID(char * struct_name, char * mem_name, char * reg_id){
+    char full_name[60];
+    sprintf(full_name, "%s.%s", struct_name, mem_name);
+    if(strcmp(getType(full_name), getType(reg_id))==0){
+        return 1;
+    }
+    return 0;
+}
 
-//     symbolExists(sym_table, "a");
+int structTypesMatch(char * struct_a, char * mem_a, char * struct_b, char * mem_b){
+    char full_name_a[60];
+    char full_name_b[60];
+    sprintf(full_name_a, "%s.%s", struct_a, mem_a);
+    sprintf(full_name_b, "%s.%s", struct_b, mem_b);
+    return areMatchingTypes(full_name_b, full_name_a);
+}
+
+char * getStructMemType(char * struct_name, char * mem_name){
+    char full_name[60];
+    sprintf(full_name, "%s.%s", struct_name, mem_name);
+    return getType(full_name);
+}
+
+int structMatchesArr(char * struct_name, char * mem_name, char * arr_name){
+    char full_name[60];
+    sprintf(full_name, "%s.%s", struct_name, mem_name);
+    return arrMatchesID(getType(arr_name), getType(full_name));
+}
+
+int arrMatchesID(char * arr_id, char * reg_id){
+    char arr_type[10];
+    strcpy(arr_type, getType(arr_id));
+    char reg_type[10];
+    strcpy(reg_type, getType(reg_id));
+    if(strcmp(arr_type, "intarr")==0 && strcmp(reg_type, "int")==0){
+        return 1;
+    }else if(strcmp(arr_type, "floatarr")==0 && strcmp(reg_type, "float")==0){
+        return 1;
+    }else if(strcmp(arr_type, "chararr")==0 && strcmp(reg_type, "char")==0){
+        return 1;
+    }else if(strcmp(arr_type, "boolarr")==0 && strcmp(reg_type, "bool")==0){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+int arrIsNumeric(char * arr_id){
+    char type[10];
+    strcpy(type, getType(arr_id));
+    if(strcmp(type, "intarr")==0 || strcmp(type, "floatarr")==0){
+        return 1;
+    }
+    return 0;
+}
+
+// int main(){
+//     // Symbol sym_table[10];
+//     // addToSymbolTable(sym_table, "a", "function", "5");
+
+//     // getType(sym_table, "a");
+//     // isFunction(sym_table,"a");
+
+//     // printSymbolTable(sym_table);
+
+//     // symbolExists(sym_table, "a");
 
 //     return 0;
 // }

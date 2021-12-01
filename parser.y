@@ -222,16 +222,16 @@ std_in_out_statement: stdin_func
                     | stdout_ln_func  
                     ;
 
-stdin_func: GETS ID {printf("STDIN");}
+stdin_func: GETS ID {if(symbolExists($2)==0){printf("ERROR (line %d): Symbol '%s' is undefined.\n", line_number, $2);}}
           ;
 
-stdout_func: PUTS ID            {}
+stdout_func: PUTS ID            {if(symbolExists($2)==0){printf("ERROR (line %d): Symbol '%s' is undefined.\n", line_number, $2);}}
             | PUTS CHARLITERAL  {}
             | PUTS INTNUM       {}
             | PUTS FLOATNUM     {}
             ;
 
-stdout_ln_func: PUTSLN ID           {}
+stdout_ln_func: PUTSLN ID           {if(symbolExists($2)==0){printf("ERROR (line %d): Symbol '%s' is undefined.\n", line_number, $2);}}
               | PUTSLN CHARLITERAL  {}
               | PUTSLN INTNUM       {}
               | PUTSLN FLOATNUM     {}
@@ -258,9 +258,16 @@ func_param_declaration: INT ID    {if(addFuncParam($2, "int") == 0){}else{printf
 function_call: ID LPAREN parameter_list RPAREN {}
               ;
 
-parameter_list: ID
-              | ID COMMA parameter_list
-              |
+parameter_list: func_call_param
+              | func_call_param COMMA parameter_list
+              | 
+              ;
+
+func_call_param: ID
+              | INTNUM
+              | CHARLITERAL
+              | FLOATNUM
+              | BOOLVAL
               ;
 
 struct_definition: STRUCT ID LBRACE struct_declaration_list RBRACE {if(symbolExists($2)==0){transferStructMems($2);}else{resetStruct();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, $2);}}
@@ -271,13 +278,13 @@ struct_declaration_list: struct_declaration SEMI
                       |
                       ;
 
-struct_declaration: INT ID SEMI     {if(addMemberToStruct($2, "int")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
-                  | CHAR ID SEMI    {if(addMemberToStruct($2, "char")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
-                  | FLOAT ID SEMI   {if(addMemberToStruct($2, "float")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
-                  | BOOL ID SEMI    {if(addMemberToStruct($2, "bool")==0){}else{printf("ERROR (%d): Struct member '%s' is already defined.\n", line_number, $2);}}
+struct_declaration: INT ID     {if(addMemberToStruct($2, "int")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  | CHAR ID    {if(addMemberToStruct($2, "char")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  | FLOAT ID   {if(addMemberToStruct($2, "float")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, $2);}}
+                  | BOOL ID    {if(addMemberToStruct($2, "bool")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, $2);}}
                   ;
 
-struct_member_reference: ID DOT ID {printf("struct ref %s . %s\n", $1, $3);}
+struct_member_reference: ID DOT ID {if(structMemExists($1, $3)){}else{printf("TYPE ERROR (line %d): '%s.%s' is undefined.\n", line_number, $1, $3);}}
                       ;
 
 iteration_statment: for_loop
@@ -307,41 +314,43 @@ dowhile_loop: LOOP_DOWHILE LBRACE statement_list RBRACE LOOP_WHILE LPAREN compou
             ;
 
 
-assignment_statement: ID ASSIGNMENT_OPERATOR ID     {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1,$3)){}else{printf("TYPE ERROR (line %d): Symbols '%s' and '%s' must both be declared and of matching types.\n", line_number, $1, $3);}}
-                    | ID ASSIGNMENT_OPERATOR FLOATNUM      {if(symbolExists($1) && strcmp(getType($1), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'float' to assign an float value.\n", line_number, $1);}}
-                    | ID ASSIGNMENT_OPERATOR INTNUM     {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'int' to assign an integer value.\n", line_number, $1);}}
-                    | ID ASSIGNMENT_OPERATOR function_call     {}
-                    | ID ASSIGNMENT_OPERATOR arithmetic_operation     {}
-                    | ID ASSIGNMENT_OPERATOR struct_member_reference     {}
-                    | ID ASSIGNMENT_OPERATOR array_reference     {}
-                    | ID ASSIGNMENT_OPERATOR BOOLVAL     {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type boolean to assign a boolean value.\n", line_number, $1);}}
-                    | struct_member_reference ASSIGNMENT_OPERATOR ID     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR FLOATNUM     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR INTNUM     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR function_call     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR arithmetic_operation     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR struct_member_reference     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR array_reference     {}
-                    | struct_member_reference ASSIGNMENT_OPERATOR BOOLVAL     {}
-                    | array_reference ASSIGNMENT_OPERATOR ID     {}
-                    | array_reference ASSIGNMENT_OPERATOR FLOATNUM     {}
-                    | array_reference ASSIGNMENT_OPERATOR INTNUM     {}
-                    | array_reference ASSIGNMENT_OPERATOR function_call     {}
-                    | array_reference ASSIGNMENT_OPERATOR arithmetic_operation     {}
-                    | array_reference ASSIGNMENT_OPERATOR struct_member_reference     {}
-                    | array_reference ASSIGNMENT_OPERATOR array_reference     {}
-                    | array_reference ASSIGNMENT_OPERATOR BOOLVAL     {}
+assignment_statement: ID ASSIGNMENT_OPERATOR ID                       {if(symbolExists($1) && symbolExists($3) && areMatchingTypes($1,$3)){}else{printf("TYPE ERROR (line %d): Symbols '%s' and '%s' must both be declared and of matching types.\n", line_number, $1, $3);}}
+                    | ID ASSIGNMENT_OPERATOR FLOATNUM                 {if(symbolExists($1) && strcmp(getType($1), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'float' to assign an float value.\n", line_number, $1);}}
+                    | ID ASSIGNMENT_OPERATOR INTNUM                   {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'int' to assign an integer value.\n", line_number, $1);}}
+                    | ID ASSIGNMENT_OPERATOR function_call            {}
+                    | ID ASSIGNMENT_OPERATOR arithmetic_operation     {if(symbolExists($1) && isNumeric($1)){}else{printf("TYPE ERROR (line $d): Cannot assign numeric value to non-numeric symbol '%s'.\n", line_number, $1);}}
+                    | ID ASSIGNMENT_OPERATOR ID DOT ID                {if(symbolExists($1) && structMemExists($3,$5) && structMatchesID($3,$5,$1)){}else{printf("TYPE ERROR (line %d): Both symbols '%s' and '%s' member of struct '%s' must be of equivalent types to assign values between them.\n", line_number, $1, $5, $3);}}
+                    | ID ASSIGNMENT_OPERATOR ID LBRACKET array_index RBRACKET          {if(symbolExists($1) && symbolExists($3) && arrMatchesID($3, $1)){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be the same type as '%s'.\n", line_number, $1, $3);}}
+                    | ID ASSIGNMENT_OPERATOR BOOLVAL                  {if(symbolExists($1) && strcmp(getType($1), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type boolean to assign a boolean value.\n", line_number, $1);}}
+                    | ID ASSIGNMENT_OPERATOR CHARLITERAL              {if(symbolExists($1) && strcmp(getType($1), "char")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type char to assign a char value.\n", line_number, $1);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR ID                {if(symbolExists($5) && structMemExists($1, $3) && structMatchesID($1, $3, $5)){}else{printf("TYPE ERROR (line %d): Symbols '%s' and '%s.%s' must be of the same type.\n", line_number, $5, $1, $3);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR FLOATNUM          {if(structMemExists($1, $3) && strcmp(getStructMemType($1, $3), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'float' to assign a float value.\n", line_number, $1, $3);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR INTNUM            {if(structMemExists($1, $3) && strcmp(getStructMemType($1, $3), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'int' to assign an integer value.\n", line_number, $1, $3);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR function_call     {}
+                    | ID DOT ID ASSIGNMENT_OPERATOR arithmetic_operation          {if(structMemExists($1, $3) && structMemNumeric($1, $3)){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of numeric type.\n", line_number, $1, $3);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR ID DOT ID         {if(structMemExists($1, $3) && structMemExists($5, $7) && structTypesMatch($1, $3, $5, $7)){}else{printf("TYPE ERROR (line %d): Struct members must be declared and of matching types.\n", line_number);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR ID LBRACKET array_index RBRACKET   {if(structMemExists($1, $3) && structMatchesArr($1, $3, $5)){}else{printf("TYPE ERROR (line %d): Struct member '%s.%s' and '%s' array element must both be declared and of the same type.\n", line_number, $1, $3, $5);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR BOOLVAL           {if(structMemExists($1, $3) && strcmp(getStructMemType($1, $3), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'bool' to assign a boolean value.\n", line_number, $1, $3);}}
+                    | ID DOT ID ASSIGNMENT_OPERATOR CHARLITERAL       {if(structMemExists($1, $3) && strcmp(getStructMemType($1, $3), "char")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'char' to assign a char value.\n", line_number, $1, $3);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR ID          {if(symbolExists($1) && symbolExists($6) && arrMatchesID($1, $6)){}else{printf("TYPE ERROR (line %d): Array '%s' must be the same type as symbol '%s'.\n", line_number, $1, $6);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR FLOATNUM    {if(symbolExists($1) && strcmp(getType($1), "floatarr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'float'.\n", line_number, $1);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR INTNUM      {if(symbolExists($1) && strcmp(getType($1), "intarr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'int'.\n", line_number, $1);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR function_call               {}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR arithmetic_operation        {if(symbolExists($1) && arrIsNumeric($1)){}else{printf("TYPE ERROR (line %d): Array '%s' must be of numeric type.\n", line_number, $1);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR ID DOT ID   {if(symbolExists($1) && structMemExists($6, $8) && structMatchesArr($6, $8, $1)){}else{printf("TYPE ERROR (line %d): Array '%s' and struct member '%s.%s' must be of compatible types.\n", line_number, $1, $6, $8);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR ID LBRACKET array_index RBRACKET {if(symbolExists($1) && symbolExists($6) && areMatchingTypes($1, $6)){}else{printf("TYPE ERROR (line %d): Arrays '%s' and '%s' must be of the same type.", line_number, $1, $6);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR BOOLVAL     {if(symbolExists($1) && strcmp(getType($1), "boolarr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'boolean'.\n", line_number, $1);}}
+                    | ID LBRACKET array_index RBRACKET ASSIGNMENT_OPERATOR CHARLITERAL                 {if(symbolExists($1) && strcmp(getType($1), "chararr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'char'.\n", line_number, $1);}}
                     ;
 
-array_definition: INT ID RBRACKET INTNUM LBRACKET
-                | FLOAT ID RBRACKET INTNUM LBRACKET
-                | CHAR ID RBRACKET INTNUM LBRACKET
-                | BOOL ID RBRACKET INTNUM LBRACKET
+array_definition: INT ID LBRACKET INTNUM RBRACKET     {if(addToSymbolTable($2, "intarr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, $2);}}
+                | FLOAT ID LBRACKET INTNUM RBRACKET   {if(addToSymbolTable($2, "floatarr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, $2);}}
+                | CHAR ID LBRACKET INTNUM RBRACKET    {if(addToSymbolTable($2, "chararr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, $2);}}
+                | BOOL ID LBRACKET INTNUM RBRACKET    {if(addToSymbolTable($2, "boolarr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, $2);}}
                 ;
 
-array_reference: ID RBRACKET INTNUM LBRACKET
-                ;
-
+array_index: INTNUM
+            | ID    {if(symbolExists($1) && strcmp(getType($1), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' used as array reference must be a defined integer type.");}}
 
 %%
 
