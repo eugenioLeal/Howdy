@@ -35,5 +35,7 @@ char * getStructMemType(char * struct_name, char * mem_name);
 int structMatchesArr(char * struct_name, char * mem_name, char * arr_name);
 int arrMatchesID(char * arr_id, char * reg_id);
 int arrIsNumeric(char * arr_id);
+void addToParams(char * type);
+int checkParams(char * func_name);
 
 #endif

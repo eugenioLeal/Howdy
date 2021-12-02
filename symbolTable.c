@@ -11,6 +11,9 @@ Symbol func_params[20];
 int struct_len = 0;
 Symbol struct_mems[20];
 
+int param_checker_len = 0;
+int param_types[20];
+
 int isNumeric(char *key){
     char type[TYPE_NAME_MAX_SIZE];
     strcpy(type, getType(key));
@@ -32,7 +35,7 @@ int addToSymbolTable(char *new_key, char *new_type){
     }
     strcpy(table[i].key, new_key);
     strcpy(table[i].type, new_type);
-    printf("Symbol added:\nKey: %s\nType: %s\n\n", new_key, new_type);
+    // printf("Symbol added:\nKey: %s\nType: %s\n\n", new_key, new_type);
     table_size++;
     return 0;
 }
@@ -285,16 +288,90 @@ int arrIsNumeric(char * arr_id){
     return 0;
 }
 
+void addToParams(char * type){
+    if(strcmp(type, "int")==0){
+        param_types[params_len] = 0;
+    }else if(strcmp(type, "float")==0){
+        param_types[params_len] = 1;
+    }else if(strcmp(type, "char")==0){
+        param_types[params_len] = 2;
+    }else if(strcmp(type, "bool")==0){
+        param_types[params_len] = 3;
+    }
+    params_len++;
+}
+
+int checkParams(char * func_name){
+    // printf("STARTED\n");
+    char name_with_dot[30];
+    sprintf(name_with_dot, "%s.", func_name); //format string to find
+    
+    int i; //iterate through symbol table
+    int params_i = 0; //iterate through param list
+    
+    char short_symbol_name[20]; //shortened symbol name (looking for 'func_name.' of func_name.myvar)
+    int name_len = strlen(func_name)+1; //length of string to find is len of func name plus the dot
+
+    int table_types[20];
+    int table_types_count = 0;
+
+    // printf("GET TYPES FROM TABLE\n");
+    for(i=0; i<table_size; i++){
+        memcpy(short_symbol_name, table[i].key, name_len);
+        // printf("SEARCHING FOR: %s | FOUND: %s\n", name_with_dot, short_symbol_name);
+        if(strcmp(short_symbol_name, name_with_dot)==0){
+            if(strcmp(table[i].type, "int")==0){
+                table_types[table_types_count] = 0;
+            }else if(strcmp(table[i].type, "float")==0){
+                table_types[table_types_count] = 1; 
+            }else if(strcmp(table[i].type, "char")==0){
+                table_types[table_types_count] = 2; 
+            }else if(strcmp(table[i].type, "bool")==0){
+                table_types[table_types_count] = 3; 
+            }
+            table_types_count++;
+        }
+        memset(short_symbol_name, 0, 20);
+    }
+
+    // int exp;
+    // printf("TYPES FROM CALL\n");
+    // for(exp=0; exp<params_len; exp++){
+    //     printf("%d:%d | ", exp, param_types[exp]);
+    // }
+    // printf("\n");
+    // printf("TYPES FROM TABLE\n");
+    // for(exp = 0; exp<table_types_count; exp++){
+    //     printf("%d:%d | ", exp, table_types[exp]);
+    // }
+    // printf("\n");
+
+    if(table_types_count != params_len){
+        printf("ERROR: incorrect number of arguments given for function '%s'.\n", func_name);
+        return 1;
+    }else{
+        for(i=0; i<table_types_count; i++){
+            if(table_types[i] != param_types[i]){
+                printf("TYPE ERROR: incorrect types passed to function '%s'.\n", func_name);
+                return 1;
+            }
+        }
+    }
+
+    return 0;
+}
+
+
 // int main(){
-//     // Symbol sym_table[10];
-//     // addToSymbolTable(sym_table, "a", "function", "5");
+//     Symbol sym_table[10];
+//     addToSymbolTable(sym_table, "a", "function", "5");
 
-//     // getType(sym_table, "a");
-//     // isFunction(sym_table,"a");
+//     getType(sym_table, "a");
+//     isFunction(sym_table,"a");
 
-//     // printSymbolTable(sym_table);
+//     printSymbolTable(sym_table);
 
-//     // symbolExists(sym_table, "a");
+//     symbolExists(sym_table, "a");
 
 //     return 0;
 // }

@@ -12,6 +12,7 @@ float \-?[0-9]+\.[0-9]+
 id [a-zA-Z][a-zA-Z0-9_]{0,30}
 whitespace [ \t]+
 char_literal '[0-9a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\"\\-]'
+escaped_char '\\n'|'\\t'|'\\r'
 string_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
 
 %%
@@ -77,6 +78,7 @@ string_literal \"[a-zA-Z!@#$%^&*()_=<>+/,.?;:\{\}\[\]\\-]*\"
 "\n" {line_number++;}
 {whitespace} {/*IGNORE*/}
 {char_literal} {return(CHARLITERAL);}
+{escaped_char} {return(CHARLITERAL);}
 {string_literal} {return(STRINGLITERAL);}
 
 . {printf("LEXICAL ERROR: Unrecognized: %s (line %d)\n", yytext, line_number);}

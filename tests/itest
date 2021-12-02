@@ -10,10 +10,11 @@ howdy partner
 	char b;
 	float c;
 	liferdeath x;
-	a holds foo.w;
+	a holds doo.a;
 	b holds foo.x;
 	c holds foo.y;
 	x holds foo.z;
+
 
 	int numarr[5];
 
@@ -33,7 +34,6 @@ howdy partner
 	foo.z holds nah;
 
 	char arr[5];
-	char arr[5];
 	float my_floats[5];
 	liferdeath my_bools[5];
 	arr[0] holds b; 
@@ -42,5 +42,7 @@ howdy partner
 		ahmPrintn a;
 	}
 
-	dostuff(4, 5);
+	dostuff(4, a);
+
+	b holds '\n';
 so long partner

@@ -2388,246 +2388,276 @@ yyreduce:
 
   case 172:
 #line 258 "parser.y"
-                                               {}
+                                               {if(symbolExists((yyvsp[-3].sval))){checkParams((yyvsp[-3].sval));}else{printf("ERROR (line %d): Function '%s' is not defined.\n", line_number, (yyvsp[-3].sval));}}
 #line 2393 "parser.tab.c"
+    break;
+
+  case 176:
+#line 266 "parser.y"
+                             {if(symbolExists((yyvsp[0].sval))){addToParams(getType((yyvsp[0].sval)));}else{printf("ERROR (line %d): Symbol '%s' is undefined.\n", line_number, (yyvsp[0].sval));}}
+#line 2399 "parser.tab.c"
+    break;
+
+  case 177:
+#line 267 "parser.y"
+                             {addToParams("int");}
+#line 2405 "parser.tab.c"
+    break;
+
+  case 178:
+#line 268 "parser.y"
+                             {addToParams("char");}
+#line 2411 "parser.tab.c"
+    break;
+
+  case 179:
+#line 269 "parser.y"
+                             {addToParams("float");}
+#line 2417 "parser.tab.c"
+    break;
+
+  case 180:
+#line 270 "parser.y"
+                             {addToParams("bool");}
+#line 2423 "parser.tab.c"
     break;
 
   case 181:
 #line 273 "parser.y"
                                                                    {if(symbolExists((yyvsp[-3].sval))==0){transferStructMems((yyvsp[-3].sval));}else{resetStruct();printf("ERROR (line %d): Symbol %s is already defined.\n", line_number, (yyvsp[-3].sval));}}
-#line 2399 "parser.tab.c"
+#line 2429 "parser.tab.c"
     break;
 
   case 185:
 #line 281 "parser.y"
                                {if(addMemberToStruct((yyvsp[0].sval), "int")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, (yyvsp[0].sval));}}
-#line 2405 "parser.tab.c"
+#line 2435 "parser.tab.c"
     break;
 
   case 186:
 #line 282 "parser.y"
                                {if(addMemberToStruct((yyvsp[0].sval), "char")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, (yyvsp[0].sval));}}
-#line 2411 "parser.tab.c"
+#line 2441 "parser.tab.c"
     break;
 
   case 187:
 #line 283 "parser.y"
                                {if(addMemberToStruct((yyvsp[0].sval), "float")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, (yyvsp[0].sval));}}
-#line 2417 "parser.tab.c"
+#line 2447 "parser.tab.c"
     break;
 
   case 188:
 #line 284 "parser.y"
                                {if(addMemberToStruct((yyvsp[0].sval), "bool")==0){}else{printf("ERROR (line %d): Struct member '%s' is already defined.\n", line_number, (yyvsp[0].sval));}}
-#line 2423 "parser.tab.c"
+#line 2453 "parser.tab.c"
     break;
 
   case 189:
 #line 287 "parser.y"
                                    {if(structMemExists((yyvsp[-2].sval), (yyvsp[0].sval))){}else{printf("TYPE ERROR (line %d): '%s.%s' is undefined.\n", line_number, (yyvsp[-2].sval), (yyvsp[0].sval));}}
-#line 2429 "parser.tab.c"
+#line 2459 "parser.tab.c"
     break;
 
   case 198:
 #line 306 "parser.y"
                                                                 {if(symbolExists((yyvsp[-2].sval)) && isNumeric((yyvsp[-2].sval))){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be declared and of numeric type.\n", line_number, (yyvsp[-2].sval));}}
-#line 2435 "parser.tab.c"
+#line 2465 "parser.tab.c"
     break;
 
   case 202:
 #line 317 "parser.y"
                                                                       {if(symbolExists((yyvsp[-2].sval)) && symbolExists((yyvsp[0].sval)) && areMatchingTypes((yyvsp[-2].sval),(yyvsp[0].sval))){}else{printf("TYPE ERROR (line %d): Symbols '%s' and '%s' must both be declared and of matching types.\n", line_number, (yyvsp[-2].sval), (yyvsp[0].sval));}}
-#line 2441 "parser.tab.c"
+#line 2471 "parser.tab.c"
     break;
 
   case 203:
 #line 318 "parser.y"
                                                                       {if(symbolExists((yyvsp[-2].sval)) && strcmp(getType((yyvsp[-2].sval)), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'float' to assign an float value.\n", line_number, (yyvsp[-2].sval));}}
-#line 2447 "parser.tab.c"
+#line 2477 "parser.tab.c"
     break;
 
   case 204:
 #line 319 "parser.y"
                                                                       {if(symbolExists((yyvsp[-2].sval)) && strcmp(getType((yyvsp[-2].sval)), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type 'int' to assign an integer value.\n", line_number, (yyvsp[-2].sval));}}
-#line 2453 "parser.tab.c"
+#line 2483 "parser.tab.c"
     break;
 
   case 205:
 #line 320 "parser.y"
                                                                       {}
-#line 2459 "parser.tab.c"
+#line 2489 "parser.tab.c"
     break;
 
   case 206:
 #line 321 "parser.y"
                                                                       {if(symbolExists((yyvsp[-2].sval)) && isNumeric((yyvsp[-2].sval))){}else{printf("TYPE ERROR (line $d): Cannot assign numeric value to non-numeric symbol '%s'.\n", line_number, (yyvsp[-2].sval));}}
-#line 2465 "parser.tab.c"
+#line 2495 "parser.tab.c"
     break;
 
   case 207:
 #line 322 "parser.y"
-                                                                      {if(symbolExists((yyvsp[-4].sval)) && structMemExists((yyvsp[-2].sval),(yyvsp[0].sval)) && structMatchesID((yyvsp[-2].sval),(yyvsp[0].sval),(yyvsp[-4].sval))){}else{printf("TYPE ERROR (line %d): Both symbols '%s' and '%s' member of struct '%s' must be of equivalent types to assign values between them.\n", line_number, (yyvsp[-4].sval), (yyvsp[0].sval), (yyvsp[-2].sval));}}
-#line 2471 "parser.tab.c"
+                                                                      {if(symbolExists((yyvsp[-4].sval)) && structMemExists((yyvsp[-2].sval),(yyvsp[0].sval)) && structMatchesID((yyvsp[-2].sval),(yyvsp[0].sval),(yyvsp[-4].sval))){}else{printf("TYPE ERROR (line %d): Both symbols '%s' and '%s' member of struct '%s' must be defined and of equivalent types to assign values between them.\n", line_number, (yyvsp[-4].sval), (yyvsp[0].sval), (yyvsp[-2].sval));}}
+#line 2501 "parser.tab.c"
     break;
 
   case 208:
 #line 323 "parser.y"
                                                                                        {if(symbolExists((yyvsp[-5].sval)) && symbolExists((yyvsp[-3].sval)) && arrMatchesID((yyvsp[-3].sval), (yyvsp[-5].sval))){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be the same type as '%s'.\n", line_number, (yyvsp[-5].sval), (yyvsp[-3].sval));}}
-#line 2477 "parser.tab.c"
+#line 2507 "parser.tab.c"
     break;
 
   case 209:
 #line 324 "parser.y"
                                                                       {if(symbolExists((yyvsp[-2].sval)) && strcmp(getType((yyvsp[-2].sval)), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type boolean to assign a boolean value.\n", line_number, (yyvsp[-2].sval));}}
-#line 2483 "parser.tab.c"
+#line 2513 "parser.tab.c"
     break;
 
   case 210:
 #line 325 "parser.y"
                                                                       {if(symbolExists((yyvsp[-2].sval)) && strcmp(getType((yyvsp[-2].sval)), "char")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' must be of type char to assign a char value.\n", line_number, (yyvsp[-2].sval));}}
-#line 2489 "parser.tab.c"
+#line 2519 "parser.tab.c"
     break;
 
   case 211:
 #line 326 "parser.y"
                                                                       {if(symbolExists((yyvsp[0].sval)) && structMemExists((yyvsp[-4].sval), (yyvsp[-2].sval)) && structMatchesID((yyvsp[-4].sval), (yyvsp[-2].sval), (yyvsp[0].sval))){}else{printf("TYPE ERROR (line %d): Symbols '%s' and '%s.%s' must be of the same type.\n", line_number, (yyvsp[0].sval), (yyvsp[-4].sval), (yyvsp[-2].sval));}}
-#line 2495 "parser.tab.c"
+#line 2525 "parser.tab.c"
     break;
 
   case 212:
 #line 327 "parser.y"
                                                                       {if(structMemExists((yyvsp[-4].sval), (yyvsp[-2].sval)) && strcmp(getStructMemType((yyvsp[-4].sval), (yyvsp[-2].sval)), "float")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'float' to assign a float value.\n", line_number, (yyvsp[-4].sval), (yyvsp[-2].sval));}}
-#line 2501 "parser.tab.c"
+#line 2531 "parser.tab.c"
     break;
 
   case 213:
 #line 328 "parser.y"
                                                                       {if(structMemExists((yyvsp[-4].sval), (yyvsp[-2].sval)) && strcmp(getStructMemType((yyvsp[-4].sval), (yyvsp[-2].sval)), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'int' to assign an integer value.\n", line_number, (yyvsp[-4].sval), (yyvsp[-2].sval));}}
-#line 2507 "parser.tab.c"
+#line 2537 "parser.tab.c"
     break;
 
   case 214:
 #line 329 "parser.y"
                                                                       {}
-#line 2513 "parser.tab.c"
+#line 2543 "parser.tab.c"
     break;
 
   case 215:
 #line 330 "parser.y"
                                                                                   {if(structMemExists((yyvsp[-4].sval), (yyvsp[-2].sval)) && structMemNumeric((yyvsp[-4].sval), (yyvsp[-2].sval))){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of numeric type.\n", line_number, (yyvsp[-4].sval), (yyvsp[-2].sval));}}
-#line 2519 "parser.tab.c"
+#line 2549 "parser.tab.c"
     break;
 
   case 216:
 #line 331 "parser.y"
                                                                       {if(structMemExists((yyvsp[-6].sval), (yyvsp[-4].sval)) && structMemExists((yyvsp[-2].sval), (yyvsp[0].sval)) && structTypesMatch((yyvsp[-6].sval), (yyvsp[-4].sval), (yyvsp[-2].sval), (yyvsp[0].sval))){}else{printf("TYPE ERROR (line %d): Struct members must be declared and of matching types.\n", line_number);}}
-#line 2525 "parser.tab.c"
+#line 2555 "parser.tab.c"
     break;
 
   case 217:
 #line 332 "parser.y"
                                                                                        {if(structMemExists((yyvsp[-7].sval), (yyvsp[-5].sval)) && structMatchesArr((yyvsp[-7].sval), (yyvsp[-5].sval), (yyvsp[-3].sval))){}else{printf("TYPE ERROR (line %d): Struct member '%s.%s' and '%s' array element must both be declared and of the same type.\n", line_number, (yyvsp[-7].sval), (yyvsp[-5].sval), (yyvsp[-3].sval));}}
-#line 2531 "parser.tab.c"
+#line 2561 "parser.tab.c"
     break;
 
   case 218:
 #line 333 "parser.y"
                                                                       {if(structMemExists((yyvsp[-4].sval), (yyvsp[-2].sval)) && strcmp(getStructMemType((yyvsp[-4].sval), (yyvsp[-2].sval)), "bool")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'bool' to assign a boolean value.\n", line_number, (yyvsp[-4].sval), (yyvsp[-2].sval));}}
-#line 2537 "parser.tab.c"
+#line 2567 "parser.tab.c"
     break;
 
   case 219:
 #line 334 "parser.y"
                                                                       {if(structMemExists((yyvsp[-4].sval), (yyvsp[-2].sval)) && strcmp(getStructMemType((yyvsp[-4].sval), (yyvsp[-2].sval)), "char")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s.%s' must be declared and of type 'char' to assign a char value.\n", line_number, (yyvsp[-4].sval), (yyvsp[-2].sval));}}
-#line 2543 "parser.tab.c"
+#line 2573 "parser.tab.c"
     break;
 
   case 220:
 #line 335 "parser.y"
                                                                                        {if(symbolExists((yyvsp[-5].sval)) && symbolExists((yyvsp[0].sval)) && arrMatchesID((yyvsp[-5].sval), (yyvsp[0].sval))){}else{printf("TYPE ERROR (line %d): Array '%s' must be the same type as symbol '%s'.\n", line_number, (yyvsp[-5].sval), (yyvsp[0].sval));}}
-#line 2549 "parser.tab.c"
+#line 2579 "parser.tab.c"
     break;
 
   case 221:
 #line 336 "parser.y"
                                                                                        {if(symbolExists((yyvsp[-5].sval)) && strcmp(getType((yyvsp[-5].sval)), "floatarr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'float'.\n", line_number, (yyvsp[-5].sval));}}
-#line 2555 "parser.tab.c"
+#line 2585 "parser.tab.c"
     break;
 
   case 222:
 #line 337 "parser.y"
                                                                                        {if(symbolExists((yyvsp[-5].sval)) && strcmp(getType((yyvsp[-5].sval)), "intarr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'int'.\n", line_number, (yyvsp[-5].sval));}}
-#line 2561 "parser.tab.c"
+#line 2591 "parser.tab.c"
     break;
 
   case 223:
 #line 338 "parser.y"
                                                                                                        {}
-#line 2567 "parser.tab.c"
+#line 2597 "parser.tab.c"
     break;
 
   case 224:
 #line 339 "parser.y"
                                                                                                        {if(symbolExists((yyvsp[-5].sval)) && arrIsNumeric((yyvsp[-5].sval))){}else{printf("TYPE ERROR (line %d): Array '%s' must be of numeric type.\n", line_number, (yyvsp[-5].sval));}}
-#line 2573 "parser.tab.c"
+#line 2603 "parser.tab.c"
     break;
 
   case 225:
 #line 340 "parser.y"
                                                                                        {if(symbolExists((yyvsp[-7].sval)) && structMemExists((yyvsp[-2].sval), (yyvsp[0].sval)) && structMatchesArr((yyvsp[-2].sval), (yyvsp[0].sval), (yyvsp[-7].sval))){}else{printf("TYPE ERROR (line %d): Array '%s' and struct member '%s.%s' must be of compatible types.\n", line_number, (yyvsp[-7].sval), (yyvsp[-2].sval), (yyvsp[0].sval));}}
-#line 2579 "parser.tab.c"
+#line 2609 "parser.tab.c"
     break;
 
   case 226:
 #line 341 "parser.y"
                                                                                                             {if(symbolExists((yyvsp[-8].sval)) && symbolExists((yyvsp[-3].sval)) && areMatchingTypes((yyvsp[-8].sval), (yyvsp[-3].sval))){}else{printf("TYPE ERROR (line %d): Arrays '%s' and '%s' must be of the same type.", line_number, (yyvsp[-8].sval), (yyvsp[-3].sval));}}
-#line 2585 "parser.tab.c"
+#line 2615 "parser.tab.c"
     break;
 
   case 227:
 #line 342 "parser.y"
                                                                                        {if(symbolExists((yyvsp[-5].sval)) && strcmp(getType((yyvsp[-5].sval)), "boolarr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'boolean'.\n", line_number, (yyvsp[-5].sval));}}
-#line 2591 "parser.tab.c"
+#line 2621 "parser.tab.c"
     break;
 
   case 228:
 #line 343 "parser.y"
                                                                                                        {if(symbolExists((yyvsp[-5].sval)) && strcmp(getType((yyvsp[-5].sval)), "chararr")==0){}else{printf("TYPE ERROR (line %d): Array '%s' must be of type 'char'.\n", line_number, (yyvsp[-5].sval));}}
-#line 2597 "parser.tab.c"
+#line 2627 "parser.tab.c"
     break;
 
   case 229:
 #line 346 "parser.y"
                                                       {if(addToSymbolTable((yyvsp[-3].sval), "intarr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, (yyvsp[-3].sval));}}
-#line 2603 "parser.tab.c"
+#line 2633 "parser.tab.c"
     break;
 
   case 230:
 #line 347 "parser.y"
                                                       {if(addToSymbolTable((yyvsp[-3].sval), "floatarr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, (yyvsp[-3].sval));}}
-#line 2609 "parser.tab.c"
+#line 2639 "parser.tab.c"
     break;
 
   case 231:
 #line 348 "parser.y"
                                                       {if(addToSymbolTable((yyvsp[-3].sval), "chararr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, (yyvsp[-3].sval));}}
-#line 2615 "parser.tab.c"
+#line 2645 "parser.tab.c"
     break;
 
   case 232:
 #line 349 "parser.y"
                                                       {if(addToSymbolTable((yyvsp[-3].sval), "boolarr")==1){printf("ERROR (line %d): Array '%s' is already defined.\n", line_number, (yyvsp[-3].sval));}}
-#line 2621 "parser.tab.c"
+#line 2651 "parser.tab.c"
     break;
 
   case 234:
 #line 353 "parser.y"
                     {if(symbolExists((yyvsp[0].sval)) && strcmp(getType((yyvsp[0].sval)), "int")==0){}else{printf("TYPE ERROR (line %d): Symbol '%s' used as array reference must be a defined integer type.");}}
-#line 2627 "parser.tab.c"
+#line 2657 "parser.tab.c"
     break;
 
 
-#line 2631 "parser.tab.c"
+#line 2661 "parser.tab.c"
 
       default: break;
     }
